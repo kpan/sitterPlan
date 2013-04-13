@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+
+#jobTable {
+	width:100%;
+}
+
+#jobs {
+	width:100%;
+}
+
+#jobsText {
+	width:90%;
+	padding:1em 1em 1em 1em;
+}
