@@ -12,6 +12,7 @@ body {
 	padding:0.2em;
 	font-family: 'Bubblegum Sans', cursive;
 	font-size:72px;
+<<<<<<< HEAD
 	color:#015A7A;
 }
 
@@ -20,3 +21,35 @@ body {
 	width:100%;
 }
 	
+=======
+}
+
+.h2{
+	font-family: 'Noto Sans', sans-serif;
+}
+
+
+/* Style for Schedule Tables*/
+.scheduleTable{
+}
+
+.scheduleTableSquare{
+	background-color: gray;
+	width: 100px;
+}
+
+.scheduleTableRow{
+	height: 20px;
+}
+
+.scheduleTableLabel{
+	font-family: 'Noto Sans', sans-serif;
+	font-size: 10pt;
+}
+
+.scheduleRowLabel{
+	font-family: 'Noto Sans', sans-serif;
+	text-align: right;
+	color: red;
+}
+>>>>>>> basic layout for schedule table

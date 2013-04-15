@@ -1,13 +1,307 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<link href='http://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>SitterPlan</title>
+
+<link rel="stylesheet" type="text/css" href="sitterPlan.css" />
+
+
 </head>
+
+<!--script type="text/javascript" src="external_js/jquery-1.9.0.min.js"></script>
+<script type="text/javascript">
+columns = 7;
+rows = 24;
+squareWidth = 600/columns;
+i = 0;
+while (i < rows){
+    j = 0;
+    $("#babysitterScheduleTable").append("<tr class=scheduleTableRow id=row"+i+" >");
+    console.log("added row");
+    console.log(j, columns)
+    while (j < columns){
+        $("#row"+i).append("<td class='scheduleTableSquare' id='r"+i+"c"+j+"'' ></td>");
+        console.log("added square");
+        j = j + 1;
+    }
+    $("#babysitterScheduleTable").append("</tr>");
+    i = i + 1;
+}
+</script-->
 
 <body>
 <h1>SitterPlan</h1>
-<input id="createJob" type="button" name="createJob" value="Create Job"/>
-<h2>My Jobs</h2>
+
+<h2 style="font-family:'Noto Sans', sans-serif">Edit Your Schedule</h2>
+<div style="font-family:'Noto Sans', sans-serif">
+paint over the times when you are free
+</div>
+<br>
+
+
+<table id="babysitterScheduleTable" class="scheduleTable" />
+<tr class='scheduleTableRow'>
+	<td class="scheduleTableLabel" ></td>
+	<td class="scheduleTableLabel">Sunday</td>
+	<td class="scheduleTableLabel">Monday</td>
+	<td class="scheduleTableLabel">Tuesday</td>
+	<td class="scheduleTableLabel">Wednesday</td>
+	<td class="scheduleTableLabel">Thursday</td>
+	<td class="scheduleTableLabel">Friday</td>
+	<td class="scheduleTableLabel">Saturday</td>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel" style="">12am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">1am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">2am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">3am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">3am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">4am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">5am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">6am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">7am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">8am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">9am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">10am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">11am</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">12pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">1pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">2pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">3pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">4pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">5pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">6pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">7pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">8pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">9pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">10pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+<tr class='scheduleTableRow'>
+	<td class="scheduleRowLabel">11pm</td>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+	<td class='scheduleTableSquare'/>
+</tr>
+
 </body>
 </html>
