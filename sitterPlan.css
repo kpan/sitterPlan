@@ -4,24 +4,30 @@
 body {
 	margin:0;
 	padding:0;
+	margin-left:100;
 	background-color:#b5ebff;
-	font-family: 'Noto Sans', cursive;
+	font-family: 'Noto Sans', helvetica;
 }
 
 #logo {
-	padding:0.2em;
-	font-family: 'Bubblegum Sans', cursive;
-	font-size:72px;
-<<<<<<< HEAD
+	padding: 0.2em;
+	font-family: 'Bubblegum Sans', helvetica;
+	font-size: 72px;
+	color: #015A7A;
+}
+
+#pageContent {
+	padding-left: 3em;
 	color:#015A7A;
 }
 
-#buttonRow {
-	background-color:#015A7A;
-	width:100%;
+#searchContactsParent{
+	padding-left: 3em;
 }
-	
-=======
+
+#buttonRow {
+	background-color: #015A7A;
+	width: 100%;
 }
 
 .h2{
@@ -34,7 +40,7 @@ body {
 }
 
 .scheduleTableSquare{
-	background-color: gray;
+	background-color:#656C70;
 	width: 100px;
 }
 
@@ -50,6 +56,9 @@ body {
 .scheduleRowLabel{
 	font-family: 'Noto Sans', sans-serif;
 	text-align: right;
-	color: red;
+	font-size: 10pt;
 }
->>>>>>> basic layout for schedule table
+
+#changeWeekButtons{
+ 	padding-left: 35em;
+}
