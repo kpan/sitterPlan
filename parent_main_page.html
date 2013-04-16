@@ -11,20 +11,106 @@
 
 <!-- Load any supplemental Javascript libraries here -->
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+<script type="text/javascript" src="schedule_table.js"></script>
 <script>
+	var earliestTimeOnSchedule = 17;
+	var latestTimeOnSchedule = 24;
+	var currentColor = "green";
+
+	var parentScheduleTable = new ScheduleTable(24, 7);
+	
+	parentScheduleTable.addEventListener('paint',function (e) {
+		if (e.details.newColor == "green") {
+			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'greenScheduleTableSquare');
+		} else if (e.details.newColor == "blank") {
+			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'blankScheduleTableSquare');
+		}
+    },true);
+	
+	$(function() {
+		$( "#startTime").text(as12HourTime(earliestTimeOnSchedule));
+		$( "#endTime").text(as12HourTime(latestTimeOnSchedule));
+		for (var i = earliestTimeOnSchedule; i < latestTimeOnSchedule; i ++){
+			$("#parentScheduleTable > tbody > tr:last").after(genRow(i));
+		}
+		
+    	$( "#timerange-slider" ).slider({range: true, min: 0, max:24,
+									 values:[ earliestTimeOnSchedule,
+									 		  latestTimeOnSchedule ],
+									 slide: function( event, ui ) {
+										 		updateTimerange( ui.values[0],
+												           ui.values[1]);
+									 }});
+  	});
+	
+	function paintIfClicking(event, day, time) {
+		if (event.which == 1) {
+			parentScheduleTable.paint(day, time, currentColor);
+		}
+	}
+
+	function genRow(time) {
+		var row = "<tr class='scheduleTableRow' id='" + as12HourTime(time) + "row" + 
+				  "'>\n<td class='scheduleRowLabel'>";
+		row += as12HourTime(time) + "</td>\n";
+		for (var day = 0; day < parentScheduleTable.width; day ++) {
+			row += "<td class='";
+			row += parentScheduleTable.getColor(day,time) + "ScheduleTableSquare";
+			row += "' id='" + day + "_" + time + "_square' ";
+			row += "onmousedown='paintIfClicking(event," + day + "," + time + ")' ";
+			row += "onmouseover='paintIfClicking(event," + day + "," + time + ")'/>\n";
+		}
+		row += "</tr>\n"
+		return row;
+	}
+		
+	function updateTimerange(startTime, endTime){
+		$( "#startTime").text(as12HourTime(startTime));
+		$( "#endTime").text(as12HourTime(endTime));
+		
+		for (var i = earliestTimeOnSchedule; i < startTime; i++) {
+			$("#" + as12HourTime(i) + "row").remove();
+		}
+		
+		for (var i = startTime; i < endTime; i ++){
+			if (i < earliestTimeOnSchedule || i >= latestTimeOnSchedule) {
+				$("#parentScheduleTable > tbody > tr").eq(i - startTime).after(genRow(i));
+			}
+		}
+		for (var i = endTime; i < latestTimeOnSchedule; i++) {
+			$("#" + as12HourTime(i) + "row").remove();
+		}
+		earliestTimeOnSchedule = startTime;
+		latestTimeOnSchedule = endTime;
+	}
+	
+	function as12HourTime(number) {
+		if (number == 0 || number == 24) {
+			return "midnight";
+		}
+		if (number < 12) {
+			return number + "am";
+		}
+		if (number == 12) {
+			return "noon";
+		} else {
+			return (number - 12) + "pm";
+		}
+	}	
+
 	function showCreateJob(){
-		var jobCreationPopup = document.createElement("div");
-		jobCreationPopup.id="createJobPopup";
-	  	jobCreationPopup.title = "Create Job";
-		
-	  	jobCreationPopup.innerHTML = "Something should go here.";
-		
-		document.getElementById("mainDiv").appendChild(jobCreationPopup);
-      	$("#createJobPopup").dialog();
+      	$("#createJobPopup").dialog({title:"Create Job",
+									 modal:true, 
+									 draggable:false, 
+									 width:800, 
+									 height:600});
   	}
+	
+	function toggleFlexVisibility(){
+		$("#flexibleSchedule").toggleClass('invisible');
+	}
 </script>
 </head>
 
@@ -56,6 +142,32 @@
         <td>No applicants yet</td></tr>
 </table>
 </div>
+<div id="createJobPopup" style="display:none;-webkit-user-select:none;-moz-user-select:none;">
+<p>First, pick times for the job.</p>
+
+<p style="font-size:small">Show times between <span id="startTime"></span> and <span id="endTime"></span>:</p>
+<div id="timerange-slider"></div>
+<table id="parentScheduleTable" class="scheduleTable" />
+    <tbody>
+	<tr class='scheduleTableRow'>
+		<td class="scheduleTableLabel" ></td>
+		<td class="scheduleTableLabel">Sunday</td>
+		<td class="scheduleTableLabel">Monday</td>
+		<td class="scheduleTableLabel">Tuesday</td>
+		<td class="scheduleTableLabel">Wednesday</td>
+		<td class="scheduleTableLabel">Thursday</td>
+		<td class="scheduleTableLabel">Friday</td>
+		<td class="scheduleTableLabel">Saturday</td>
+	</tr>
+    </tbody>
+</table>
+<br/>
+<input type="radio" name="flexibility" checked="checked" value="rigid"/> I want a babysitter for the entire time I've painted. <br/>
+<input type="radio" name="flexibility" value="flexible" onchange="toggleFlexVisibility()"/> I want a babysitter for only part of the time I've painted:<br/>
+<div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
+<input type="text" name="jobLength" value="2" style="text-align:right;width:2em;"/> hours sometime within what I've painted.
+</div>
+</div> 
 </div>
 </body>
 </html>

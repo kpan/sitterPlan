@@ -39,8 +39,21 @@ body {
 .scheduleTable{
 }
 
-.scheduleTableSquare{
-	background-color:#656C70;
+.invisible{
+	display:none;
+}
+
+.blankScheduleTableSquare{
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	background-color:#CCCCCC;
+	width: 100px;
+}
+
+.greenScheduleTableSquare{
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	background-color:#00FF00;
 	width: 100px;
 }
 
@@ -49,11 +62,15 @@ body {
 }
 
 .scheduleTableLabel{
+	-webkit-user-select:none;
+	-moz-user-select:none;
 	font-family: 'Noto Sans', sans-serif;
 	font-size: 10pt;
 }
 
 .scheduleRowLabel{
+	-webkit-user-select:none;
+	-moz-user-select:none;
 	font-family: 'Noto Sans', sans-serif;
 	text-align: right;
 	font-size: 10pt;
