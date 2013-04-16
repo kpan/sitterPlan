@@ -15,7 +15,7 @@
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <script type="text/javascript" src="schedule_table.js"></script>
 <script>
-	var earliestTimeOnSchedule = 17;
+	var earliestTimeOnSchedule = 13;
 	var latestTimeOnSchedule = 24;
 	var currentColor = "green";
 
@@ -36,13 +36,19 @@
 			$("#parentScheduleTable > tbody > tr:last").after(genRow(i));
 		}
 		
+		$( "#createJob").addClass("h2");
+		$( "#manageContacts").addClass("h2");
+		
     	$( "#timerange-slider" ).slider({range: true, min: 0, max:24,
-									 values:[ earliestTimeOnSchedule,
-									 		  latestTimeOnSchedule ],
+									 orientation:"vertical",
+									 values:[ 24 - latestTimeOnSchedule,
+									 		  24 - earliestTimeOnSchedule ],
 									 slide: function( event, ui ) {
-										 		updateTimerange( ui.values[0],
-												           ui.values[1]);
-									 }});
+										 		updateTimerange( 24 - ui.values[1],
+												           24 - ui.values[0]);
+									 }}).height("300px");
+		$( "#timerange-slider > a:first").text(asShort12HourTime(latestTimeOnSchedule)).addClass("sliderLabel");
+		$( "#timerange-slider > a:last").text(asShort12HourTime(earliestTimeOnSchedule)).addClass("sliderLabel");
   	});
 	
 	function paintIfClicking(event, day, time) {
@@ -69,6 +75,9 @@
 	function updateTimerange(startTime, endTime){
 		$( "#startTime").text(as12HourTime(startTime));
 		$( "#endTime").text(as12HourTime(endTime));
+		
+		$( "#timerange-slider > a:first").text(asShort12HourTime(endTime));
+		$( "#timerange-slider > a:last").text(asShort12HourTime(startTime));
 		
 		for (var i = earliestTimeOnSchedule; i < startTime; i++) {
 			$("#" + as12HourTime(i) + "row").remove();
@@ -100,12 +109,30 @@
 		}
 	}	
 
+	function asShort12HourTime(number) {
+		if (number == 0) {
+			return 12;
+		}
+		if (number <= 12) {
+			return number;
+		}
+		return number - 12;
+	}	
+
 	function showCreateJob(){
       	$("#createJobPopup").dialog({title:"Create Job",
 									 modal:true, 
 									 draggable:false, 
 									 width:800, 
-									 height:600});
+									 height:600}).addClass("bodyFont");
+  	}
+	
+	function showManageContacts(){
+      	$("#manageContactsPopup").dialog({title:"Manage Contacts",
+									 modal:true, 
+									 draggable:false, 
+									 width:800, 
+									 height:600}).addClass("bodyFont");
   	}
 	
 	function toggleFlexVisibility(){
@@ -118,56 +145,80 @@
 <div id="logo">SitterPlan</div>
 <table id="buttonRow">
 	<tr>
-    	<td></td>
-    	<td>
-			<input id="createJob" type="button" name="createJob" value="Create Job" onclick="showCreateJob();"/>
-        </td>
-        <td>
-            <input id="manageContacts" type="button" name="manageContacts" value="Manage Contacts"/>
-        </td>
+    	<td/>
+    	<td><input id="createJob" type="button" name="createJob" 
+                   value="Create Job" onclick="showCreateJob();"/></td>
+        <td><input id="manageContacts" type="button" name="manageContacts" 
+        		   value="Manage Contacts" onclick="showManageContacts();"/></td>
     </tr>
 </table>
 <div id="mainDiv">
-<div id="jobsText">
-<h2>My Jobs</h2>
-<table id="jobTable">
-   	<tr><td><a href = "javascript:none;">Watch Bobby</a></td>
-    	<td>Friday April 19, 5PM to 10PM</td>
-        <td>Hired Alice</td></tr>
-    <tr><td><a href = "javascript:none;">Watch Susie</a></td>
-    	<td>Tuesday April 16, 8PM to 10PM</td>
-        <td><a href = "javascript:none;">2 Applicants</a></td></tr>
-    <tr><td><a href = "javascript:none;">Watch Bobby and Susie</a></td>
-    	<td>Thursday April 18, 7PM to 11PM</td>
-        <td>No applicants yet</td></tr>
-</table>
-</div>
-<div id="createJobPopup" style="display:none;-webkit-user-select:none;-moz-user-select:none;">
-<p>First, pick times for the job.</p>
-
-<p style="font-size:small">Show times between <span id="startTime"></span> and <span id="endTime"></span>:</p>
-<div id="timerange-slider"></div>
-<table id="parentScheduleTable" class="scheduleTable" />
-    <tbody>
-	<tr class='scheduleTableRow'>
-		<td class="scheduleTableLabel" ></td>
-		<td class="scheduleTableLabel">Sunday</td>
-		<td class="scheduleTableLabel">Monday</td>
-		<td class="scheduleTableLabel">Tuesday</td>
-		<td class="scheduleTableLabel">Wednesday</td>
-		<td class="scheduleTableLabel">Thursday</td>
-		<td class="scheduleTableLabel">Friday</td>
-		<td class="scheduleTableLabel">Saturday</td>
-	</tr>
-    </tbody>
-</table>
-<br/>
-<input type="radio" name="flexibility" checked="checked" value="rigid"/> I want a babysitter for the entire time I've painted. <br/>
-<input type="radio" name="flexibility" value="flexible" onchange="toggleFlexVisibility()"/> I want a babysitter for only part of the time I've painted:<br/>
-<div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
-<input type="text" name="jobLength" value="2" style="text-align:right;width:2em;"/> hours sometime within what I've painted.
-</div>
-</div> 
+	<div id="jobsText">
+		<h2>My Jobs</h2>
+		<table id="jobTable">
+   			<tr><td><a href = "javascript:none;">Watch Bobby</a></td>
+    			<td>Friday April 19, 5PM to 10PM</td>
+        		<td>Hired Alice</td></tr>
+    		<tr><td><a href = "javascript:none;">Watch Susie</a></td>
+    			<td>Tuesday April 16, 8PM to 10PM</td>
+        		<td><a href = "javascript:none;">2 Applicants</a></td></tr>
+    		<tr><td><a href = "javascript:none;">Watch Bobby and Susie</a></td>
+    			<td>Thursday April 18, 7PM to 11PM</td>
+        		<td>No applicants yet</td></tr>
+		</table>
+	</div>
+	<div id="manageContactsPopup" style="display:none;">
+		<span>Search for new contacts<span>
+		<input type="text" name="Search" value="username">
+		<input id="searchContactParents" type="button" value="Search"/>
+		<div id="contacts">
+			<h2>My Contacts</h2>
+			<div id="contactList">
+				<a href="javascript:none;">Jimmy Peterson</a><br>
+				<a href="javascript:none;">Susie Smith</a><br>
+				<a href="javascript:none;">Mark Williamson</a><br>
+				<a href="javascript:none;">Jennifer Wu</a><br>
+			</div>
+		</div>
+	</div>
+	<div id="createJobPopup" style="display:none;-webkit-user-select:none;-moz-user-select:none;">
+		<p>First, pick times for the job by painting the calendar.</p>
+		<table>
+        	<tr>
+            	<td valign="top"><div id="timerange-slider"></div></td>
+                <td>
+					<table id="parentScheduleTable" class="scheduleTable" />
+    					<tbody>
+							<tr class='scheduleTableRow'>
+								<td class="scheduleTableLabel" ></td>
+								<td class="scheduleTableLabel">Sunday</td>
+								<td class="scheduleTableLabel">Monday</td>
+								<td class="scheduleTableLabel">Tuesday</td>
+								<td class="scheduleTableLabel">Wednesday</td>
+								<td class="scheduleTableLabel">Thursday</td>
+								<td class="scheduleTableLabel">Friday</td>
+								<td class="scheduleTableLabel">Saturday</td>
+							</tr>
+    					</tbody>
+					</table>
+        		</td>
+        	</tr>
+        </table>
+		<br/>
+        <div style="font-size:small">
+			<input type="radio" name="flexibility" checked="checked" 
+        	   value="rigid" onchange="toggleFlexVisibility()"/> 
+               I want a babysitter for the entire time I've painted. <br/>
+			<input type="radio" name="flexibility" 
+        	   value="flexible" onchange="toggleFlexVisibility()"/> 
+               I want a babysitter for only part of the time I've painted:<br/>
+			<div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
+				<input type="text" name="jobLength" value="2" 
+            	   style="text-align:right;width:2em;"/> 
+                   hours sometime within what I've painted.
+			</div>
+        </div>
+	</div> 
 </div>
 </body>
 </html>

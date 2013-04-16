@@ -31,9 +31,10 @@ body {
 }
 
 .h2{
+	font-size:large;
 	font-family: 'Noto Sans', sans-serif;
 }
-
+	
 
 /* Style for Schedule Tables*/
 .scheduleTable{

@@ -13,3 +13,14 @@
 	width:90%;
 	padding:1em 1em 1em 1em;
 }
+
+
+.bodyFont{
+	font-family: 'Noto Sans', sans-serif;
+}
+
+
+.sliderLabel{
+	text-align:right;
+	text-decoration:none;
+}
