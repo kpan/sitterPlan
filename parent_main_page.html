@@ -15,9 +15,14 @@
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <script type="text/javascript" src="schedule_table.js"></script>
 <script>
+	
 	var earliestTimeOnSchedule = 13;
 	var latestTimeOnSchedule = 24;
 	var currentColor = "green";
+	var painting = false;
+	
+	var dialog;
+	var earliestDateOnSchedule = new Date();
 
 	var parentScheduleTable = new ScheduleTable(24, 7);
 	
@@ -36,10 +41,22 @@
 			$("#parentScheduleTable > tbody > tr:last").after(genRow(i));
 		}
 		
+		for (var i = 0; i < 7; i++) {
+			var tempDate = new Date();
+			tempDate.setDate(earliestDateOnSchedule.getDate() + i);
+			var dateString = tempDate.toDateString();
+			dateString = dateString.substring(0, dateString.length - 4);
+			$("#day" + i).text(dateString);
+		}
+		
 		$( "#createJob").addClass("h2");
 		$( "#manageContacts").addClass("h2");
 		
-    	$( "#timerange-slider" ).slider({range: true, min: 0, max:24,
+		makeSlider();
+  	});
+	
+	function makeSlider() {
+		$( "#timerange-slider" ).slider({range: true, min: 0, max:24,
 									 orientation:"vertical",
 									 values:[ 24 - latestTimeOnSchedule,
 									 		  24 - earliestTimeOnSchedule ],
@@ -49,10 +66,18 @@
 									 }}).height("300px");
 		$( "#timerange-slider > a:first").text(asShort12HourTime(latestTimeOnSchedule)).addClass("sliderLabel");
 		$( "#timerange-slider > a:last").text(asShort12HourTime(earliestTimeOnSchedule)).addClass("sliderLabel");
-  	});
+	}
+	
+	document.onmousedown = function() {
+		painting = true;
+	}
+	
+	document.onmouseup = function() {
+		painting = false;
+	}
 	
 	function paintIfClicking(event, day, time) {
-		if (event.which == 1) {
+		if (painting) {
 			parentScheduleTable.paint(day, time, currentColor);
 		}
 	}
@@ -65,7 +90,7 @@
 			row += "<td class='";
 			row += parentScheduleTable.getColor(day,time) + "ScheduleTableSquare";
 			row += "' id='" + day + "_" + time + "_square' ";
-			row += "onmousedown='paintIfClicking(event," + day + "," + time + ")' ";
+			row += "onmousedown='parentScheduleTable.paint(" + day + "," + time + ", currentColor)' ";
 			row += "onmouseover='paintIfClicking(event," + day + "," + time + ")'/>\n";
 		}
 		row += "</tr>\n"
@@ -118,13 +143,56 @@
 		}
 		return number - 12;
 	}	
+	
+	function submitJob() {
+		$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
+				"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
+		parentScheduleTable.clear();
+		$("#jobTitle").val("");
+		$("#jobDetails").val("");
+		$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
+		$("#createJobPopup").dialog('close');
+	}
+	
+	function getJobTimes() {
+		var time = "";
+		if ('checked' == $("#flexibleButton").attr('checked')) {
+			time += $("#jobLength").val() + " hours within ";
+		}
+		var outputstrings = [];
+		var timeblocks = parentScheduleTable.getTimeblocks();
+		for (var i = 0; i < timeblocks.length; i++) {
+			var block = timeblocks[i];
+			outputstrings.push($("#day" + block.start.day).text() + " " + as12HourTime(block.start.hour) 
+									 + " to " + as12HourTime(block.end.hour));
+		}
+		return time + outputstrings.join(" or ");
+	}
+	
+	function toggleFlexVisibility(){
+		$("#flexibleSchedule").toggleClass('invisible');
+	}
+	
+	function nextDialog() {
+		$("#hidingDiv").append($("#createJobPopup > #createJobPageOne").replaceWith($("#createJobPageTwo")));
+		$("#jobTime").text(getJobTimes);
+		$("#jobTitle").focus();
+	}
+	
+	function firstDialog() {
+		makeSlider();
+		$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").replaceWith($("#createJobPageOne")));
+	}
 
 	function showCreateJob(){
-      	$("#createJobPopup").dialog({title:"Create Job",
+		$("#hidingDiv").append($("#createJobPageOne").detach());
+		$("#hidingDiv").append($("#createJobPageTwo").detach());
+      	dialog = $("#createJobPopup").dialog({title:"Create Job",
 									 modal:true, 
-									 draggable:false, 
+									 draggable:false,
 									 width:800, 
-									 height:600}).addClass("bodyFont");
+									 height:600}).addClass("bodyFont").append($("#createJobPageOne"));
+		makeSlider();
   	}
 	
 	function showManageContacts(){
@@ -135,9 +203,6 @@
 									 height:600}).addClass("bodyFont");
   	}
 	
-	function toggleFlexVisibility(){
-		$("#flexibleSchedule").toggleClass('invisible');
-	}
 </script>
 </head>
 
@@ -157,14 +222,11 @@
 		<h2>My Jobs</h2>
 		<table id="jobTable">
    			<tr><td><a href = "javascript:none;">Watch Bobby</a></td>
-    			<td>Friday April 19, 5PM to 10PM</td>
+    			<td>Fri Apr 19 5pm to 10pm</td>
         		<td>Hired Alice</td></tr>
     		<tr><td><a href = "javascript:none;">Watch Susie</a></td>
-    			<td>Tuesday April 16, 8PM to 10PM</td>
+    			<td>Tue Apr 23 8pm to 10pm</td>
         		<td><a href = "javascript:none;">2 Applicants</a></td></tr>
-    		<tr><td><a href = "javascript:none;">Watch Bobby and Susie</a></td>
-    			<td>Thursday April 18, 7PM to 11PM</td>
-        		<td>No applicants yet</td></tr>
 		</table>
 	</div>
 	<div id="manageContactsPopup" style="display:none;">
@@ -181,7 +243,9 @@
 			</div>
 		</div>
 	</div>
-	<div id="createJobPopup" style="display:none;-webkit-user-select:none;-moz-user-select:none;">
+<div id="hidingDiv" style="display:none;">
+    <div id="createJobPopup" style="-webkit-user-select:none;-moz-user-select:none;"></div>
+	<div id="createJobPageOne" style="-webkit-user-select:none;-moz-user-select:none;">
 		<p>First, pick times for the job by painting the calendar.</p>
 		<table>
         	<tr>
@@ -191,13 +255,13 @@
     					<tbody>
 							<tr class='scheduleTableRow'>
 								<td class="scheduleTableLabel" ></td>
-								<td class="scheduleTableLabel">Sunday</td>
-								<td class="scheduleTableLabel">Monday</td>
-								<td class="scheduleTableLabel">Tuesday</td>
-								<td class="scheduleTableLabel">Wednesday</td>
-								<td class="scheduleTableLabel">Thursday</td>
-								<td class="scheduleTableLabel">Friday</td>
-								<td class="scheduleTableLabel">Saturday</td>
+								<td id="day0" class="scheduleTableLabel">Sunday</td>
+								<td id="day1" class="scheduleTableLabel">Monday</td>
+								<td id="day2" class="scheduleTableLabel">Tuesday</td>
+								<td id="day3" class="scheduleTableLabel">Wednesday</td>
+								<td id="day4" class="scheduleTableLabel">Thursday</td>
+								<td id="day5" class="scheduleTableLabel">Friday</td>
+								<td id="day6" class="scheduleTableLabel">Saturday</td>
 							</tr>
     					</tbody>
 					</table>
@@ -205,20 +269,40 @@
         	</tr>
         </table>
 		<br/>
-        <div style="font-size:small">
-			<input type="radio" name="flexibility" checked="checked" 
-        	   value="rigid" onchange="toggleFlexVisibility()"/> 
-               I want a babysitter for the entire time I've painted. <br/>
-			<input type="radio" name="flexibility" 
-        	   value="flexible" onchange="toggleFlexVisibility()"/> 
-               I want a babysitter for only part of the time I've painted:<br/>
-			<div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
-				<input type="text" name="jobLength" value="2" 
-            	   style="text-align:right;width:2em;"/> 
-                   hours sometime within what I've painted.
-			</div>
-        </div>
-	</div> 
+        <table><tr><td>
+        	<div style="font-size:small">
+				<input type="radio" name="flexibility" checked="checked" 
+        	   		   value="rigid" onchange="toggleFlexVisibility()"/> 
+               		   I want a babysitter for the entire time I've painted. <br/>
+				<input type="radio" name="flexibility" id="flexibleButton"
+        	   		   value="flexible" onchange="toggleFlexVisibility()"/> 
+               		   I want a babysitter for only part of the time I've painted:<br/>
+					   <div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
+					   		<input type="text" name="jobLength" value="2" 
+            	   				   style="text-align:right;width:2em;"/> 
+                   				   hours sometime within what I've painted.
+					   </div>
+        	</div></td>
+        <td><input align="top" type="button" name="next" value="Next" onclick="nextDialog()"/></td></tr></table>
+	</div>
+    <div id="createJobPageTwo" style="-webkit-user-select:none;-moz-user-select:none;">
+		<p>Now, add a description to your job and send it to your babysitters.</p>
+        <p><span id="jobTime"></span></p>
+        <table><tr><td>Job title:</td><td><input type="text" id="jobTitle" name="jobTitle"/></td></tr>
+        	   <tr><td>Details:  </td><td><textarea id="jobDetails" name="jobDetails"></textarea></td></tr></table>
+        <p>Babysitters to tell about the job:</p>
+        	<input type="checkbox" name="babysitters" checked="checked" value="Jimmy Peterson"/>
+            	Jimmy Peterson <br/>
+            <input type="checkbox" name="babysitters" checked="checked" value="Jimmy Peterson"/>
+            	Susie Smith <br/>
+            <input type="checkbox" name="babysitters" checked="checked" value="Jimmy Peterson"/>
+            	Mark Williamson <br/>
+            <input type="checkbox" name="babysitters" checked="checked" value="Jimmy Peterson"/>
+            	Jennifer Wu <br/>
+        <table><tr><td><input type="button" name="back" value="Go Back" onclick="firstDialog()"/></td>
+        		   <td><input type="button" name="next" value="Post Job" onclick="submitJob()"/></td></tr></table>
+	</div>
+</div>
 </div>
 </body>
 </html>

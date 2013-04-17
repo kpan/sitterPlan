@@ -3,7 +3,7 @@ var ScheduleTable = function(height, width) {
 	this.width = width;
 	this.days = new Array(this.width);
     // make an empty checkerboard
-    for (var i=0; i<=this.width; i++){
+    for (var i=0; i < this.width; i++){
 		this.days[i] = [];
 	}
 	
@@ -15,6 +15,39 @@ var ScheduleTable = function(height, width) {
 			this.days[day][hour] = color;
 			this.dispatchEvent("paint", {day:day, hour:hour, newColor:color});
 		}
+	}
+	
+	this.clear = function() {
+		for (var i = 0; i < this.width; i ++) {
+			for (var j = 0; j < this.height; j++) {
+				if(this.days[i][j] != null) {
+					delete this.days[i][j];
+					this.dispatchEvent("paint", {day:i, hour:j, newColor:"blank"});
+				}
+			}
+		}
+	}
+	
+	this.getTimeblocks = function() {
+		var timeblocks = [];
+		var inTimeblock = false;
+		var timeblockStart;
+		for (var i = 0; i < this.width; i ++) {
+			for (var j = 0; j < this.height; j++) {
+				if (this.getColor(i, j) == "blank") {
+					if (inTimeblock) {
+						timeblocks.push({start:timeblockStart, end:{day:i,hour:j}});
+						inTimeblock = false;
+					}
+				} else {
+					if (!inTimeblock) {
+						inTimeblock = true;
+						timeblockStart = {day:i,hour:j};
+					}
+				}	
+			}
+		}
+		return timeblocks;
 	}
 	
 	this.getColor = function(day, hour) {
