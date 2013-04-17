@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<link href='http://fonts.googleapis.com/css?family=Bubblegum+Sans|Noto+Sans' rel='stylesheet' type='text/css'>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>SitterPlan - Contact List</title>
 <link rel="stylesheet" type="text/css" href="sitterPlan.css" />
@@ -8,9 +9,17 @@
 
 <body>
 	<div id="logo">SitterPlan</div>
+	<table id="buttonRow">
+		<tr>
+	    	<td></td>
+	    	<td>
+				<input id="manageJobs" type="button" name="manageJobs" value="Manage Jobs" onclick="showCreateJob();"/>
+	        </td>
+	    </tr>
+	</table>	
 	<div id="pageContent">
 		<span>Search for new contacts<span>
-		<input type="text" name="Search" value="username">
+		<input type="text" name="Search" value="">
 		<input id="searchContactParents" type="button" value="Search"/>
 		<div id="conacts">
 			<h2>My Contacts</h2>
