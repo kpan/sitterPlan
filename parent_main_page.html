@@ -160,6 +160,9 @@
 		parentScheduleTable.clear();
 		$("#jobTitle").val("");
 		$("#jobDetails").val("");
+		
+		$("#flexibleSchedule").addClass('invisible');
+		document.getElementById("rigidButton").checked = true;
 		$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
 		$("#createJobPopup").dialog('close');
 	}
