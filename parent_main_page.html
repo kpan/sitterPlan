@@ -167,7 +167,7 @@
 	// get the times that are painted over, as a string
 	function getJobTimes() {
 		var time = "";
-		if ('checked' == $("#flexibleButton").attr('checked')) {
+		if (document.getElementById("flexibleButton").checked) {
 			time += $("#jobLength").val() + " hours within ";
 		}
 		var outputstrings = [];
@@ -183,6 +183,7 @@
 	// show or hide the div that lets you put in how many hours the job is
 	function toggleFlexVisibility(){
 		$("#flexibleSchedule").toggleClass('invisible');
+		$("#jobLength").focus();
 	}
 	
 	// go to the second dialog
@@ -287,14 +288,14 @@
 		<br/>
         <table><tr><td>
         	<div style="font-size:small">
-				<input type="radio" name="flexibility" checked="checked" 
+				<input type="radio" name="flexibility" id="rigidButton" checked="checked" 
         	   		   value="rigid" onchange="toggleFlexVisibility()"/> 
-               		   I want a babysitter for the entire time I've painted. <br/>
+                <label for="rigidButton">I want a babysitter for the entire time I've painted.</label><br/>
 				<input type="radio" name="flexibility" id="flexibleButton"
         	   		   value="flexible" onchange="toggleFlexVisibility()"/> 
-               		   I want a babysitter for only part of the time I've painted:<br/>
+               	<label for="flexibleButton">I want a babysitter for only part of the time I've painted:</label><br/>
 					   <div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
-					   		<input type="text" name="jobLength" value="2" 
+					   		<input type="text" name="jobLength" id="jobLength" value="2" 
             	   				   style="text-align:right;width:2em;"/> 
                    				   hours sometime within what I've painted.
 					   </div>
@@ -303,18 +304,18 @@
 	</div>
     <div id="createJobPageTwo" style="-webkit-user-select:none;-moz-user-select:none;">
 		<p>Now, add a description to your job and send it to your babysitters.</p>
-        <p><span id="jobTime"></span></p>
         <table><tr><td>Job title:</td><td><input type="text" id="jobTitle" name="jobTitle"/></td></tr>
+        	   <tr><td>Time:     </td><td><span id="jobTime"></span></td></tr>
         	   <tr><td>Details:  </td><td><textarea id="jobDetails" name="jobDetails"></textarea></td></tr></table>
         <p>Babysitters to tell about the job:</p>
-        	<input type="checkbox" name="babysitters" checked="checked" value="Jimmy Peterson"/>
-            	Jimmy Peterson <br/>
-            <input type="checkbox" name="babysitters" checked="checked" value="Jimmy Peterson"/>
-            	Susie Smith <br/>
-            <input type="checkbox" name="babysitters" checked="checked" value="Jimmy Peterson"/>
-            	Mark Williamson <br/>
-            <input type="checkbox" name="babysitters" checked="checked" value="Jimmy Peterson"/>
-            	Jennifer Wu <br/>
+        	<input type="checkbox" name="babysitters" checked="checked" id="Jimmy_Peterson" value="Jimmy Peterson"/>
+            <label for="Jimmy_Peterson">Jimmy Peterson</label><br/>
+            <input type="checkbox" name="babysitters" checked="checked" id="Susie_Smith" value="Susie Smith"/>
+            <label for="Susie_Smith">Susie Smith</label><br/>
+            <input type="checkbox" name="babysitters" checked="checked" id="Mark_Williamson" value="Mark Williamson"/>
+            <label for="Mark_Williamson">Mark Williamson</label><br/>
+            <input type="checkbox" name="babysitters" checked="checked" id="Jennifer_Wu" value="Jennifer Wu"/>
+            <label for="Jennifer_Wu">Jennifer Wu</label><br/>
         <table><tr><td><input type="button" name="back" value="Go Back" onclick="firstDialog()"/></td>
         		   <td><input type="button" name="next" value="Post Job" onclick="submitJob()"/></td></tr></table>
 	</div>
