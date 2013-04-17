@@ -16,6 +16,11 @@ body {
 	color: #015A7A;
 }
 
+
+.bodyFont{
+	font-family: 'Noto Sans', sans-serif;
+}
+
 #pageContent {
 	padding-left: 3em;
 	color:#015A7A;
