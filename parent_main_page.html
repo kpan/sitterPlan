@@ -15,17 +15,20 @@
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <script type="text/javascript" src="schedule_table.js"></script>
 <script>
-	
+	//the times on the schedule to display (controlled by the slider)
 	var earliestTimeOnSchedule = 13;
 	var latestTimeOnSchedule = 24;
+	//color to paint in, currently always green
 	var currentColor = "green";
+	//whether the mouse button is down
 	var painting = false;
-	
-	var dialog;
+	//the first date to display (currently always today)
 	var earliestDateOnSchedule = new Date();
 
+	//representation of which things are colored
 	var parentScheduleTable = new ScheduleTable(24, 7);
 	
+	//update the displayed table with new information if stuff gets painted
 	parentScheduleTable.addEventListener('paint',function (e) {
 		if (e.details.newColor == "green") {
 			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'greenScheduleTableSquare');
@@ -34,13 +37,14 @@
 		}
     },true);
 	
+	//initialization things
 	$(function() {
-		$( "#startTime").text(as12HourTime(earliestTimeOnSchedule));
-		$( "#endTime").text(as12HourTime(latestTimeOnSchedule));
+		// add all the rows for the various hours of days to the table you can paint
 		for (var i = earliestTimeOnSchedule; i < latestTimeOnSchedule; i ++){
 			$("#parentScheduleTable > tbody > tr:last").after(genRow(i));
 		}
 		
+		// make the labels for the columns
 		for (var i = 0; i < 7; i++) {
 			var tempDate = new Date();
 			tempDate.setDate(earliestDateOnSchedule.getDate() + i);
@@ -49,12 +53,11 @@
 			$("#day" + i).text(dateString);
 		}
 		
-		$( "#createJob").addClass("h2");
-		$( "#manageContacts").addClass("h2");
-		
+		// initialize the slider for which times are showing
 		makeSlider();
   	});
 	
+	//initialize the slider for which times are showing.
 	function makeSlider() {
 		$( "#timerange-slider" ).slider({range: true, min: 0, max:24,
 									 orientation:"vertical",
@@ -68,6 +71,7 @@
 		$( "#timerange-slider > a:last").text(asShort12HourTime(earliestTimeOnSchedule)).addClass("sliderLabel");
 	}
 	
+	// track whether the mouse button is down
 	document.onmousedown = function() {
 		painting = true;
 	}
@@ -76,12 +80,14 @@
 		painting = false;
 	}
 	
+	// on mouseover to a table cell, paint it if the mouse button's down
 	function paintIfClicking(event, day, time) {
 		if (painting) {
 			parentScheduleTable.paint(day, time, currentColor);
 		}
 	}
 
+	// make a row for the table: makes a bunch of table cells with appropriate event handlers
 	function genRow(time) {
 		var row = "<tr class='scheduleTableRow' id='" + as12HourTime(time) + "row" + 
 				  "'>\n<td class='scheduleRowLabel'>";
@@ -96,7 +102,8 @@
 		row += "</tr>\n"
 		return row;
 	}
-		
+	
+	// scale the table appropriately when the slider moves	
 	function updateTimerange(startTime, endTime){
 		$( "#startTime").text(as12HourTime(startTime));
 		$( "#endTime").text(as12HourTime(endTime));
@@ -120,6 +127,7 @@
 		latestTimeOnSchedule = endTime;
 	}
 	
+	// convert a number to a nice time like "5am"
 	function as12HourTime(number) {
 		if (number == 0 || number == 24) {
 			return "midnight";
@@ -134,6 +142,7 @@
 		}
 	}	
 
+	// convert a number to a short time like "5"
 	function asShort12HourTime(number) {
 		if (number == 0) {
 			return 12;
@@ -144,6 +153,7 @@
 		return number - 12;
 	}	
 	
+	// close the dialog, clear all its data, make a new row in the jobs list
 	function submitJob() {
 		$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
 				"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
@@ -154,6 +164,7 @@
 		$("#createJobPopup").dialog('close');
 	}
 	
+	// get the times that are painted over, as a string
 	function getJobTimes() {
 		var time = "";
 		if ('checked' == $("#flexibleButton").attr('checked')) {
@@ -169,21 +180,25 @@
 		return time + outputstrings.join(" or ");
 	}
 	
+	// show or hide the div that lets you put in how many hours the job is
 	function toggleFlexVisibility(){
 		$("#flexibleSchedule").toggleClass('invisible');
 	}
 	
+	// go to the second dialog
 	function nextDialog() {
 		$("#hidingDiv").append($("#createJobPopup > #createJobPageOne").replaceWith($("#createJobPageTwo")));
 		$("#jobTime").text(getJobTimes);
 		$("#jobTitle").focus();
 	}
 	
+	// go to the first dialog
 	function firstDialog() {
 		makeSlider();
 		$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").replaceWith($("#createJobPageOne")));
 	}
 
+	// show the job creation popup
 	function showCreateJob(){
 		$("#hidingDiv").append($("#createJobPageOne").detach());
 		$("#hidingDiv").append($("#createJobPageTwo").detach());
@@ -195,6 +210,7 @@
 		makeSlider();
   	}
 	
+	// show the contacts managing popup
 	function showManageContacts(){
       	$("#manageContactsPopup").dialog({title:"Manage Contacts",
 									 modal:true, 
@@ -211,9 +227,9 @@
 <table id="buttonRow">
 	<tr>
     	<td/>
-    	<td><input id="createJob" type="button" name="createJob" 
+    	<td><input id="createJob" class="h2" type="button" name="createJob" 
                    value="Create Job" onclick="showCreateJob();"/></td>
-        <td><input id="manageContacts" type="button" name="manageContacts" 
+        <td><input id="manageContacts" class="h2" type="button" name="manageContacts" 
         		   value="Manage Contacts" onclick="showManageContacts();"/></td>
     </tr>
 </table>
