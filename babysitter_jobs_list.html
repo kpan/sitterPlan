@@ -326,6 +326,9 @@
 									 height:600}).addClass("bodyFont");
   	}
 	
+	function showApplyJobPopup(){
+      	$("#applyJobPopup").dialog()	}
+	
 </script>
 
 <body>
@@ -446,6 +449,10 @@
 		<br/>
         <table><tr>
         <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td></tr></table>
+	</div>
+	<div id="applyJobPopup" title="applyJobPopup">
+		<p>You've applied to the job.</p>
+		<input align="top" type="button" name="ok" value="OK" onclick="$('#applyJobPopup').dialog('close')"/>
 	</div>
 </div>
 </div>
