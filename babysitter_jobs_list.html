@@ -6,6 +6,7 @@
 
 <!-- Load style sheets -->
 <link href='http://fonts.googleapis.com/css?family=Bubblegum+Sans|Noto+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="sitterPlan.css" />
 
 <!-- Load any supplemental Javascript libraries here -->
@@ -286,13 +287,8 @@
 	}	
 	
 	// close the dialog, clear all its data, make a new row in the jobs list
-	function submitJob() {
-		$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
-				"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
-		babysitterScheduleTable.clear();
-		$("#jobTitle").val("");
-		$("#jobDetails").val("");
-		$("#hidingDiv").append($("#editSchedulePopup > #editSchedulePageTwo").remove());
+	function submitSchedule() {
+		$("#hidingDiv").append($("#editSchedulePopup").remove());
 		$("#editSchedulePopup").dialog('close');
 	}
 	
@@ -307,19 +303,6 @@
 									 + " to " + as12HourTime(block.end.hour));
 		}
 		return time + outputstrings.join(" or ");
-	}
-	
-	// go to the second dialog
-	function nextDialog() {
-		$("#hidingDiv").append($("#editSchedulePopup > #editSchedulePageOne").replaceWith($("#editSchedulePageTwo")));
-		$("#jobTime").text(getJobTimes);
-		$("#jobTitle").focus();
-	}
-	
-	// go to the first dialog
-	function firstDialog() {
-		makeSlider();
-		$("#hidingDiv").append($("#editSchedulePopup > #editSchedulePageTwo").replaceWith($("#editSchedulePageOne")));
 	}
 
 	// show the job creation popup
@@ -444,10 +427,9 @@
         	</tr>
         </table>
 		<br/>
-	<div align='right'>
-		<a href="babysitter_apply_jobs.html"> <input id="calenderView" type="button" name="calenderView" value="Done"/> </a>
-	</div> 
-
+        <table><tr>
+        <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td></tr></table>
+	</div>
 </div>
 </body>
 </html>
