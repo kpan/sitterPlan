@@ -16,6 +16,10 @@ body {
 	color: #015A7A;
 }
 
+#mainDiv {
+	width:100%;
+	padding:1em 1em 1em 1em;
+}
 
 .bodyFont{
 	font-family: 'Noto Sans', sans-serif;
