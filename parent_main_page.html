@@ -104,10 +104,7 @@
 	}
 	
 	// scale the table appropriately when the slider moves	
-	function updateTimerange(startTime, endTime){
-		$( "#startTime").text(as12HourTime(startTime));
-		$( "#endTime").text(as12HourTime(endTime));
-		
+	function updateTimerange(startTime, endTime){		
 		$( "#timerange-slider > a:first").text(asShort12HourTime(endTime));
 		$( "#timerange-slider > a:last").text(asShort12HourTime(startTime));
 		
@@ -206,7 +203,7 @@
 	function showCreateJob(){
 		$("#hidingDiv").append($("#createJobPageOne").detach());
 		$("#hidingDiv").append($("#createJobPageTwo").detach());
-      	dialog = $("#createJobPopup").dialog({title:"Create Job",
+      	$("#createJobPopup").dialog({title:"Create Job",
 									 modal:true, 
 									 draggable:false,
 									 width:800, 
