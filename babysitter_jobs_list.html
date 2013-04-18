@@ -337,14 +337,15 @@
 			<input id="editSchedule" type="button" name="editSchedule" value="Edit Schedule" onclick="showEditSchedule();" />
         </td>
         <td>
-            <a href="babysitter_apply_jobs.html"> <input id="calenderView" type="button" name="calenderView" value="Calender View"/> </a>
+            <a href="babysitter_apply_jobs.html"> <input id="calendarView" type="button" name="calendarView" value="Calendar View"/> </a>
         </td>
         <td>
-            <input id="manageContacts" type="button" name="manageContacts" value="ManageContacts" onclick="manageContacts();"/>
+            <input id="manageContactsButton" type="button" name="manageContacts" value="Manage Contacts" onclick="showManageContacts();"/>
         </td>
     </tr>
 </table>
 </table>
+<div id="mainDiv">
 <h2>My Jobs</h2>
 <table style='border:2px solid #000000; width:100%; text-align:center;' cellPadding="10" >
 	<tr>
@@ -372,9 +373,9 @@
 		<td> </td>
 	</tr>
 </table>
-<p style='line-height: 1.3em'> &nbsp; </p>
+<p style='line-height: 1.3em'>&nbsp;  </p>
 </table>
-<h2>Avalible Jobs</h2>
+<h2>Available Jobs</h2>
 <table style='border:2px solid #000000; width:100%; text-align:center;' cellPadding="10" >
 	<tr>
 		<th> Family </td>
@@ -401,10 +402,26 @@
 		<td> <input id="applyEvans" type="button" name="applyEvans" value="Apply" onclick="showApplyJobPopup()"/></td>
 	</tr>
 </table>
+<div id="manageContactsPopup" style="display:none;">
+		<span>Search for new contacts<span>
+		<input type="text" name="Search" value="username">
+		<input id="searchContactParents" type="button" value="Search"/>
+		<div id="contacts">
+			<h2>My Contacts</h2>
+			<div id="contactList">
+				<a href="javascript:none;">Anderson</a><br>
+				<a href="javascript:none;">Evans</a><br>
+				<a href="javascript:none;">Frank</a><br>
+				<a href="javascript:none;">Goldstein</a><br>
+				<a href="javascript:none;">Smith</a><br>
+				<a href="javascript:none;">Wu</a><br>
+			</div>
+		</div>
+</div>
 <div id="hidingDiv" style="display:none;">
     <div id="editSchedulePopup" style="-webkit-user-select:none;-moz-user-select:none;"></div>
 	<div id="editSchedulePageOne" style="-webkit-user-select:none;-moz-user-select:none;">
-		<p>First, pick times you are free by painting the calendar.</p>
+		<p>Pick times you are free by painting the calendar.</p>
 		<table>
         	<tr>
             	<td valign="top"><div id="timerange-slider"></div></td>
@@ -430,6 +447,7 @@
         <table><tr>
         <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td></tr></table>
 	</div>
+</div>
 </div>
 </body>
 </html>
