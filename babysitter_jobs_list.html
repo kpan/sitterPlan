@@ -143,16 +143,221 @@
 
 </head>
 
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+<script type="text/javascript" src="schedule_table.js"></script>
+<script>
+	//the times on the schedule to display (controlled by the slider)
+	var earliestTimeOnSchedule = 13;
+	var latestTimeOnSchedule = 24;
+	//color to paint in, currently always green
+	var currentColor = "green";
+	//whether the mouse button is down
+	var painting = false;
+	//the first date to display (currently always today)
+	var earliestDateOnSchedule = new Date();
+
+	//representation of which things are colored
+	var babysitterScheduleTable = new ScheduleTable(24, 7);
+	
+	//update the displayed table with new information if stuff gets painted
+	babysitterScheduleTable.addEventListener('paint',function (e) {
+		if (e.details.newColor == "green") {
+			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'greenScheduleTableSquare');
+		} else if (e.details.newColor == "blank") {
+			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'blankScheduleTableSquare');
+		}
+    },true);
+	
+	//initialization things
+	$(function() {
+		// add all the rows for the various hours of days to the table you can paint
+		for (var i = earliestTimeOnSchedule; i < latestTimeOnSchedule; i ++){
+			$("#babysitterScheduleTable > tbody > tr:last").after(genRow(i));
+		}
+		
+		// make the labels for the columns
+		for (var i = 0; i < 7; i++) {
+			var tempDate = new Date();
+			tempDate.setDate(earliestDateOnSchedule.getDate() + i);
+			var dateString = tempDate.toDateString();
+			dateString = dateString.substring(0, dateString.length - 4);
+			$("#day" + i).text(dateString);
+		}
+		
+		// initialize the slider for which times are showing
+		makeSlider();
+  	});
+	
+	//initialize the slider for which times are showing.
+	function makeSlider() {
+		$( "#timerange-slider" ).slider({range: true, min: 0, max:24,
+									 orientation:"vertical",
+									 values:[ 24 - latestTimeOnSchedule,
+									 		  24 - earliestTimeOnSchedule ],
+									 slide: function( event, ui ) {
+										 		updateTimerange( 24 - ui.values[1],
+												           24 - ui.values[0]);
+									 }}).height("300px");
+		$( "#timerange-slider > a:first").text(asShort12HourTime(latestTimeOnSchedule)).addClass("sliderLabel");
+		$( "#timerange-slider > a:last").text(asShort12HourTime(earliestTimeOnSchedule)).addClass("sliderLabel");
+	}
+	
+	// track whether the mouse button is down
+	document.onmousedown = function() {
+		painting = true;
+	}
+	
+	document.onmouseup = function() {
+		painting = false;
+	}
+	
+	// on mouseover to a table cell, paint it if the mouse button's down
+	function paintIfClicking(event, day, time) {
+		if (painting) {
+			babysitterScheduleTable.paint(day, time, currentColor);
+		}
+	}
+
+	// make a row for the table: makes a bunch of table cells with appropriate event handlers
+	function genRow(time) {
+		var row = "<tr class='scheduleTableRow' id='" + as12HourTime(time) + "row" + 
+				  "'>\n<td class='scheduleRowLabel'>";
+		row += as12HourTime(time) + "</td>\n";
+		for (var day = 0; day < babysitterScheduleTable.width; day ++) {
+			row += "<td class='";
+			row += babysitterScheduleTable.getColor(day,time) + "ScheduleTableSquare";
+			row += "' id='" + day + "_" + time + "_square' ";
+			row += "onmousedown='babysitterScheduleTable.paint(" + day + "," + time + ", currentColor)' ";
+			row += "onmouseover='paintIfClicking(event," + day + "," + time + ")'/>\n";
+		}
+		row += "</tr>\n"
+		return row;
+	}
+	
+	// scale the table appropriately when the slider moves	
+	function updateTimerange(startTime, endTime){
+		$( "#startTime").text(as12HourTime(startTime));
+		$( "#endTime").text(as12HourTime(endTime));
+		
+		$( "#timerange-slider > a:first").text(asShort12HourTime(endTime));
+		$( "#timerange-slider > a:last").text(asShort12HourTime(startTime));
+		
+		for (var i = earliestTimeOnSchedule; i < startTime; i++) {
+			$("#" + as12HourTime(i) + "row").remove();
+		}
+		
+		for (var i = startTime; i < endTime; i ++){
+			if (i < earliestTimeOnSchedule || i >= latestTimeOnSchedule) {
+				$("#babysitterScheduleTable > tbody > tr").eq(i - startTime).after(genRow(i));
+			}
+		}
+		for (var i = endTime; i < latestTimeOnSchedule; i++) {
+			$("#" + as12HourTime(i) + "row").remove();
+		}
+		earliestTimeOnSchedule = startTime;
+		latestTimeOnSchedule = endTime;
+	}
+	
+	// convert a number to a nice time like "5am"
+	function as12HourTime(number) {
+		if (number == 0 || number == 24) {
+			return "midnight";
+		}
+		if (number < 12) {
+			return number + "am";
+		}
+		if (number == 12) {
+			return "noon";
+		} else {
+			return (number - 12) + "pm";
+		}
+	}	
+
+	// convert a number to a short time like "5"
+	function asShort12HourTime(number) {
+		if (number == 0) {
+			return 12;
+		}
+		if (number <= 12) {
+			return number;
+		}
+		return number - 12;
+	}	
+	
+	// close the dialog, clear all its data, make a new row in the jobs list
+	function submitJob() {
+		$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
+				"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
+		babysitterScheduleTable.clear();
+		$("#jobTitle").val("");
+		$("#jobDetails").val("");
+		$("#hidingDiv").append($("#editSchedulePopup > #editSchedulePageTwo").remove());
+		$("#editSchedulePopup").dialog('close');
+	}
+	
+	// get the times that are painted over, as a string
+	function getFreeTimes() {
+		var time = "";
+		var outputstrings = [];
+		var timeblocks = babysitterScheduleTable.getTimeblocks();
+		for (var i = 0; i < timeblocks.length; i++) {
+			var block = timeblocks[i];
+			outputstrings.push($("#day" + block.start.day).text() + " " + as12HourTime(block.start.hour) 
+									 + " to " + as12HourTime(block.end.hour));
+		}
+		return time + outputstrings.join(" or ");
+	}
+	
+	// go to the second dialog
+	function nextDialog() {
+		$("#hidingDiv").append($("#editSchedulePopup > #editSchedulePageOne").replaceWith($("#editSchedulePageTwo")));
+		$("#jobTime").text(getJobTimes);
+		$("#jobTitle").focus();
+	}
+	
+	// go to the first dialog
+	function firstDialog() {
+		makeSlider();
+		$("#hidingDiv").append($("#editSchedulePopup > #editSchedulePageTwo").replaceWith($("#editSchedulePageOne")));
+	}
+
+	// show the job creation popup
+	function showEditSchedule(){
+		$("#hidingDiv").append($("#editSchedulePageOne").detach());
+		$("#hidingDiv").append($("#editSchedulePageTwo").detach());
+      	dialog = $("#editSchedulePopup").dialog({title:"Edit Your Schedule",
+									 modal:true, 
+									 draggable:false,
+									 width:800, 
+									 height:600}).addClass("bodyFont").append($("#editSchedulePageOne"));
+		makeSlider();
+  	}
+	
+	// show the contacts managing popup
+	function showManageContacts(){
+      	$("#manageContactsPopup").dialog({title:"Manage Contacts",
+									 modal:true, 
+									 draggable:false, 
+									 width:800, 
+									 height:600}).addClass("bodyFont");
+  	}
+	
+</script>
+
 <body>
 <div id="logo">SitterPlan</div>
 <table id="buttonRow">
 	<tr>
     	<td></td>
     	<td>
-			<input id="editSchedule" type="button" name="editSchedule" value="Edit Schedule"  onclick="showCreateJob();"/>
+			<input id="editSchedule" type="button" name="editSchedule" value="Edit Schedule" onclick="showEditSchedule();" />
         </td>
         <td>
             <a href="babysitter_apply_jobs.html"> <input id="calenderView" type="button" name="calenderView" value="Calender View"/> </a>
+        </td>
+        <td>
+            <input id="manageContacts" type="button" name="manageContacts" value="ManageContacts" onclick="manageContacts();"/>
         </td>
     </tr>
 </table>
@@ -213,52 +418,25 @@
 		<td> <input id="applyEvans" type="button" name="applyEvans" value="Apply" onclick="showApplyJobPopup()"/></td>
 	</tr>
 </table>
-<div id="mainDiv">
-	<div id="jobsText">
-		<h2>My Jobs</h2>
-		<table id="jobTable">
-   			<tr><td><a href = "javascript:none;">Watch Bobby</a></td>
-    			<td>Friday April 19, 5PM to 10PM</td>
-        		<td>Hired Alice</td></tr>
-    		<tr><td><a href = "javascript:none;">Watch Susie</a></td>
-    			<td>Tuesday April 16, 8PM to 10PM</td>
-        		<td><a href = "javascript:none;">2 Applicants</a></td></tr>
-    		<tr><td><a href = "javascript:none;">Watch Bobby and Susie</a></td>
-    			<td>Thursday April 18, 7PM to 11PM</td>
-        		<td>No applicants yet</td></tr>
-		</table>
-	</div>
-	<div id="manageContactsPopup" style="display:none;">
-		<span>Search for new contacts<span>
-		<input type="text" name="Search" value="username">
-		<input id="searchContactParents" type="button" value="Search"/>
-		<div id="contacts">
-			<h2>My Contacts</h2>
-			<div id="contactList">
-				<a href="javascript:none;">Jimmy Peterson</a><br>
-				<a href="javascript:none;">Susie Smith</a><br>
-				<a href="javascript:none;">Mark Williamson</a><br>
-				<a href="javascript:none;">Jennifer Wu</a><br>
-			</div>
-		</div>
-	</div>
-	<div id="createJobPopup" style="display:none;-webkit-user-select:none;-moz-user-select:none;">
-		<p>First, pick times you are avalible by painting the calendar.</p>
+<div id="hidingDiv" style="display:none;">
+    <div id="editSchedulePopup" style="-webkit-user-select:none;-moz-user-select:none;"></div>
+	<div id="editSchedulePageOne" style="-webkit-user-select:none;-moz-user-select:none;">
+		<p>First, pick times you are free by painting the calendar.</p>
 		<table>
         	<tr>
             	<td valign="top"><div id="timerange-slider"></div></td>
                 <td>
-					<table id="parentScheduleTable" class="scheduleTable" />
+					<table id="babysitterScheduleTable" class="scheduleTable" />
     					<tbody>
 							<tr class='scheduleTableRow'>
 								<td class="scheduleTableLabel" ></td>
-								<td class="scheduleTableLabel">Sunday</td>
-								<td class="scheduleTableLabel">Monday</td>
-								<td class="scheduleTableLabel">Tuesday</td>
-								<td class="scheduleTableLabel">Wednesday</td>
-								<td class="scheduleTableLabel">Thursday</td>
-								<td class="scheduleTableLabel">Friday</td>
-								<td class="scheduleTableLabel">Saturday</td>
+								<td id="day0" class="scheduleTableLabel">Sunday</td>
+								<td id="day1" class="scheduleTableLabel">Monday</td>
+								<td id="day2" class="scheduleTableLabel">Tuesday</td>
+								<td id="day3" class="scheduleTableLabel">Wednesday</td>
+								<td id="day4" class="scheduleTableLabel">Thursday</td>
+								<td id="day5" class="scheduleTableLabel">Friday</td>
+								<td id="day6" class="scheduleTableLabel">Saturday</td>
 							</tr>
     					</tbody>
 					</table>
@@ -266,8 +444,10 @@
         	</tr>
         </table>
 		<br/>
-
+	<div align='right'>
+		<a href="babysitter_apply_jobs.html"> <input id="calenderView" type="button" name="calenderView" value="Done"/> </a>
 	</div> 
+
 </div>
 </body>
 </html>
