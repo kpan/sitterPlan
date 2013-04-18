@@ -53,6 +53,10 @@ body {
 	display:none;
 }
 
+.freeSquare{
+	background-color:#FFFEF0;
+}
+
 .blankScheduleTableSquare{
 	-webkit-user-select:none;
 	-moz-user-select:none;
