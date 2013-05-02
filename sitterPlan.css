@@ -56,6 +56,9 @@ body {
 .freeSquare{
 	background-color:#FFFEF0;
 }
+.nonfreeSquare{
+	background-color:#999999;
+}
 
 .blankScheduleTableSquare{
 	-webkit-user-select:none;
@@ -92,4 +95,51 @@ body {
 
 #changeWeekButtons{
  	padding-left: 35em;
+}
+
+.availableTop{
+	background-color:hsl(125,80%,65%);
+	margin: 0px 5px;
+	padding: 0px 5px;
+	-moz-border-top-left-radius: 15px;
+	-moz-border-top-right-radius: 15px;
+	border-top-left-radius:15px;
+	border-top-right-radius:15px;
+}
+.availableMiddle{
+	background-color:hsl(125,80%,65%);
+	margin: 0px 5px;
+	padding: 0px 5px;
+}
+.availableBottom{
+	background-color:hsl(125,80%,65%);
+	margin: 0px 5px;
+	padding: 0px 5px;
+	-moz-border-bottom-left-radius: 15px;
+	-moz-border-bottom-right-radius: 15px;
+	border-bottom-left-radius:15px;
+	border-bottom-right-radius:15px;
+}
+.acceptedTop{
+	background-color:hsl(125,30%,50%);
+	margin: 0px 5px;
+	padding: 0px 5px;
+	-moz-border-top-left-radius: 15px;
+	-moz-border-top-right-radius: 15px;
+	border-top-left-radius:15px;
+	border-top-right-radius:15px;
+}
+.acceptedMiddle{
+	background-color:hsl(125,30%,50%);
+	margin: 0px 5px;
+	padding: 0px 5px;
+}
+.acceptedBottom{
+	background-color:hsl(125,30%,50%);
+	margin: 0px 5px;
+	padding: 0px 5px;
+	-moz-border-bottom-left-radius: 15px;
+	-moz-border-bottom-right-radius: 15px;
+	border-bottom-left-radius:15px;
+	border-bottom-right-radius:15px;
 }
