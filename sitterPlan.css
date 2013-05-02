@@ -39,7 +39,9 @@ body {
 	width: 100%;
 }
 
-.h2{
+.bigButton{
+	height:50px;
+	padding:10px;
 	font-size:large;
 	font-family: 'Noto Sans', sans-serif;
 }
@@ -120,6 +122,19 @@ body {
 	border-bottom-left-radius:15px;
 	border-bottom-right-radius:15px;
 }
+.availableSingleSquare{
+	background-color:hsl(125,80%,65%);
+	margin: 0px 5px;
+	padding: 0px 5px;
+	-moz-border-top-left-radius: 15px;
+	-moz-border-top-right-radius: 15px;
+	border-top-left-radius:15px;
+	border-top-right-radius:15px;
+	-moz-border-bottom-left-radius: 15px;
+	-moz-border-bottom-right-radius: 15px;
+	border-bottom-left-radius:15px;
+	border-bottom-right-radius:15px;
+}
 .acceptedTop{
 	background-color:hsl(125,30%,50%);
 	margin: 0px 5px;
@@ -138,6 +153,19 @@ body {
 	background-color:hsl(125,30%,50%);
 	margin: 0px 5px;
 	padding: 0px 5px;
+	-moz-border-bottom-left-radius: 15px;
+	-moz-border-bottom-right-radius: 15px;
+	border-bottom-left-radius:15px;
+	border-bottom-right-radius:15px;
+}
+.acceptedSingleSquare{
+	background-color:hsl(125,30%,50%);
+	margin: 0px 5px;
+	padding: 0px 5px;
+	-moz-border-top-left-radius: 15px;
+	-moz-border-top-right-radius: 15px;
+	border-top-left-radius:15px;
+	border-top-right-radius:15px;
 	-moz-border-bottom-left-radius: 15px;
 	-moz-border-bottom-right-radius: 15px;
 	border-bottom-left-radius:15px;
