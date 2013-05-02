@@ -167,8 +167,10 @@
 	// get the times that are painted over, as a string
 	function getJobTimes() {
 		var time = "";
+		var separator = " and ";
 		if (document.getElementById("flexibleButton").checked) {
 			time += $("#jobLength").val() + " hours within ";
+			separator = " or ";
 		}
 		var outputstrings = [];
 		var timeblocks = parentScheduleTable.getTimeblocks();
@@ -177,7 +179,7 @@
 			outputstrings.push($("#day" + block.start.day).text() + " " + as12HourTime(block.start.hour) 
 									 + " to " + as12HourTime(block.end.hour));
 		}
-		return time + outputstrings.join(" or ");
+		return time + outputstrings.join(separator);
 	}
 	
 	// show or hide the div that lets you put in how many hours the job is
