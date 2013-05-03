@@ -167,8 +167,10 @@
 	// get the times that are painted over, as a string
 	function getJobTimes() {
 		var time = "";
+		var separator = " and ";
 		if (document.getElementById("flexibleButton").checked) {
 			time += $("#jobLength").val() + " hours within ";
+			separator = " or ";
 		}
 		var outputstrings = [];
 		var timeblocks = parentScheduleTable.getTimeblocks();
@@ -177,7 +179,7 @@
 			outputstrings.push($("#day" + block.start.day).text() + " " + as12HourTime(block.start.hour) 
 									 + " to " + as12HourTime(block.end.hour));
 		}
-		return time + outputstrings.join(" or ");
+		return time + outputstrings.join(separator);
 	}
 	
 	// show or hide the div that lets you put in how many hours the job is
@@ -228,9 +230,9 @@
 <table id="buttonRow">
 	<tr>
     	<td/>
-    	<td><input id="createJob" class="h2" type="button" name="createJob" 
+    	<td><input id="createJob" class="bigButton" type="button" name="createJob" 
                    value="Create Job" onclick="showCreateJob();"/></td>
-        <td><input id="manageContacts" class="h2" type="button" name="manageContacts" 
+        <td><input id="manageContacts" class="bigButton" type="button" name="manageContacts" 
         		   value="Manage Contacts" onclick="showManageContacts();"/></td>
     </tr>
 </table>
@@ -263,7 +265,7 @@
 <div id="hidingDiv" style="display:none;">
     <div id="createJobPopup" style="-webkit-user-select:none;-moz-user-select:none;"></div>
 	<div id="createJobPageOne" style="-webkit-user-select:none;-moz-user-select:none;">
-		<p>First, pick times for the job by painting the calendar.</p>
+		<p>Step 1 of 2: Pick times for the job by painting the calendar.</p>
 		<table>
         	<tr>
             	<td valign="top"><div id="timerange-slider"></div></td>
@@ -303,11 +305,18 @@
         <td style="vertical-align:top"><input type="button" name="next" value="Next" onclick="nextDialog()"/></td></tr></table>
 	</div>
     <div id="createJobPageTwo" style="-webkit-user-select:none;-moz-user-select:none;">
+<<<<<<< HEAD
 		<p>Now, add a description to your job and send it to your babysitters.</p>
         <table><tr><td align=right>Job title:</td><td><input type="text" id="jobTitle" name="jobTitle"/></td></tr>
         	   <tr><td align=right>Time:     </td><td><span id="jobTime"></span></td></tr>
 			   <!--<tr><td align=right>Date:     </td><td><span id="jobTime"></span></td></tr>-->
         	   <tr><td align=right>Details:  </td><td><textarea id="jobDetails" name="jobDetails"></textarea></td></tr></table>
+=======
+		<p>Step 2 of 2: Add a description to your job and send it to your babysitters.</p>
+        <table><tr><td>Job title:</td><td><input type="text" id="jobTitle" name="jobTitle"/></td></tr>
+        	   <tr><td>Time:     </td><td><span id="jobTime"></span></td></tr>
+        	   <tr><td>Details:  </td><td><textarea id="jobDetails" name="jobDetails"></textarea></td></tr></table>
+>>>>>>> 4b5527f72ddb5d5f00f33ce9d09bed111eead0cb
         <p>Babysitters to tell about the job:</p>
 		<div>
         	<input type="checkbox" name="babysitters" checked="checked" id="Jimmy_Peterson" value="Jimmy Peterson"/>
