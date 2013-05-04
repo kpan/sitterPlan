@@ -19,7 +19,7 @@ http://127.0.0.1:8000/parent/contacts/smith
 
 or
 
-http://127.0.0.1:8000/parent/contacts/jimmy 
+http://127.0.0.1:8000/sitter/contacts/jimmy 
 
 to see contact databases working.
 (All parent usernames are their last names, all sitter usernames are
