@@ -152,16 +152,22 @@
 	
 	// close the dialog, clear all its data, make a new row in the jobs list
 	function submitJob() {
-		$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
-				"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
-		parentScheduleTable.clear();
-		$("#jobTitle").val("");
-		$("#jobDetails").val("");
-		
-		$("#flexibleSchedule").addClass('invisible');
-		document.getElementById("rigidButton").checked = true;
-		$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
-		$("#createJobPopup").dialog('close');
+
+		if (getJobTimes() == ""){
+			showEmptyJobPopup();
+		}
+		else{
+			$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
+					"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
+			parentScheduleTable.clear();
+			$("#jobTitle").val("");
+			$("#jobDetails").val("");
+			
+			$("#flexibleSchedule").addClass('invisible');
+			document.getElementById("rigidButton").checked = true;
+			$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
+			$("#createJobPopup").dialog('close');
+		}
 	}
 	
 	// get the times that are painted over, as a string
@@ -221,6 +227,9 @@
 									 width:800, 
 									 height:600}).addClass("bodyFont");
   	}
+
+  	function showEmptyJobPopup(){
+      	$("#emptyJobPopup").dialog()	}
 	
 </script>
 </head>
@@ -303,7 +312,9 @@
 					   </div>
         	</div></td>
         <td style="vertical-align:top"><input type="button" name="next" value="Next" onclick="nextDialog()"/></td></tr></table>
+
 	</div>
+
     <div id="createJobPageTwo" style="-webkit-user-select:none;-moz-user-select:none;">
 		<p>Step 2 of 2: Add a description to your job and send it to your babysitters.</p>
         <table><tr><td>Job title:</td><td><input type="text" id="jobTitle" name="jobTitle"/></td></tr>
@@ -324,6 +335,15 @@
 		<p></p>
         <table><tr><td><input type="button" name="back" value="Go Back" onclick="firstDialog()"/></td>
         		   <td><input type="button" name="next" value="Post Job" onclick="submitJob()"/></td></tr></table>
+	</div>
+
+	<div id="emptyJobPopup" title="">
+		<p>You cannot create a job with no times selected</p>
+		<table>
+			<td>
+				<tr> <input align="top" type="button" name="ok" value="Ok" onclick="$('#emptyJobPopup').dialog('close')"/> </tr>
+			</td>
+		</table>
 	</div>
 </div>
 </div>
