@@ -337,7 +337,7 @@
 	<tr>
     	<td></td>
 		 <td>
-            <a href="babysitter_apply_jobs.html"> <input id="calendarView" type="button" name="calendarView" value="Calendar View   " class="bigButton"/> </a>
+            <a href="babysitter_apply_jobs.html" style="text-decoration:none"> <input id="calendarView" type="button" name="calendarView" value="Calendar View   " class="bigButton"/> </a>
         </td>
     	<td>
 			<input id="editSchedule" type="button" name="editSchedule" value="Edit Schedule" class="bigButton" onclick="showEditSchedule();" />
@@ -451,12 +451,12 @@
         <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td></tr></table>
 	</div>
 	<div id="applyJobPopup" title="">
-		<p>Do you want to apply to the job.</p>
+		<p>Do you want to apply to the job?</p>
 		<!-- need to retrieve job name here-->
 		<table>
 			<td>
-				<tr> <input align="top" type="button" name="ok" value="OK" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
-				<tr><input align="top" type="button" name="cancle" value="Cancle" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
+				<tr> <input align="top" type="button" name="ok" value="Yes" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
+				<tr><input align="top" type="button" name="cancel" value="No" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
 			</td>
 		</table>
 	</div>
