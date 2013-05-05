@@ -157,16 +157,21 @@
 			showEmptyJobPopup();
 		}
 		else{
-			$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
-					"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
-			parentScheduleTable.clear();
-			$("#jobTitle").val("");
-			$("#jobDetails").val("");
-			
-			$("#flexibleSchedule").addClass('invisible');
-			document.getElementById("rigidButton").checked = true;
-			$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
-			$("#createJobPopup").dialog('close');
+			if ($("#jobTitle").val() == ""){
+				showEmptyTitlePopup();
+			}
+			else{
+				$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
+						"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
+				parentScheduleTable.clear();
+				$("#jobTitle").val("");
+				$("#jobDetails").val("");
+				
+				$("#flexibleSchedule").addClass('invisible');
+				document.getElementById("rigidButton").checked = true;
+				$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
+				$("#createJobPopup").dialog('close');
+			}
 		}
 	}
 	
@@ -233,6 +238,9 @@
 
   	function showEmptyJobPopup(){
       	$("#emptyJobPopup").dialog()	}
+		
+	function showEmptyTitlePopup(){
+      	$("#emptyTitlePopup").dialog()	}
 	
 </script>
 </head>
@@ -340,6 +348,15 @@
 		<table>
 			<td>
 				<tr> <input align="top" type="button" name="ok" value="Ok" onclick="$('#emptyJobPopup').dialog('close')"/> </tr>
+			</td>
+		</table>
+	</div>
+	
+	<div id="emptyTitlePopup" title="">
+		<p>You must enter a title for your job.</p>
+		<table>
+			<td>
+				<tr> <input align="top" type="button" name="ok" value="Ok" onclick="$('#emptyTitlePopup').dialog('close')"/> </tr>
 			</td>
 		</table>
 	</div>
