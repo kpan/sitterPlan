@@ -1,4 +1,5 @@
 # Django settings for sitterplan project.
+from local_install_info import base_path
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,7 +13,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'C:/Python27/sitterplan/database.db',                      # Or path to database file if using sqlite3.
+        'NAME': base_path() + 'sitterplan/database.db',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',

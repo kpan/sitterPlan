@@ -3,8 +3,8 @@ app.  There is a database storing parents and sitters and jobs.
 Parent/Sitter contact relations work.
 
 To play with it:
-Go to sitterplan/sitterplan/settings.py.  Change the 'NAME': line
-to point to the path to the sitterplan/database.db file on your machine.
+Go to sitterplan/sitterplan/local_install_info.py.  Change the function to return
+the path to the folder holding all the stuff (all the HTML files and everything).
 
 Start the server by doing 
 

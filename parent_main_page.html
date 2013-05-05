@@ -6,14 +6,14 @@
 
 <!-- Load style sheets -->
 <link href='http://fonts.googleapis.com/css?family=Bubblegum+Sans|Noto+Sans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css" href="sitterPlan.css" />
-<link rel="stylesheet" type="text/css" href="parent_main_page.css" />
+<link rel="stylesheet" type="text/css" href="genericCss" />
+<link rel="stylesheet" type="text/css" href="css" />
 
 <!-- Load any supplemental Javascript libraries here -->
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-<script type="text/javascript" src="schedule_table.js"></script>
+<script type="text/javascript" src="scheduleTableJs"></script>
 <script>
 	//the times on the schedule to display (controlled by the slider)
 	var earliestTimeOnSchedule = 13;
@@ -226,6 +226,9 @@
 									 draggable:false, 
 									 width:800, 
 									 height:600}).addClass("bodyFont");
+		$.get('contacts/smith', function(data) {
+			alert(data);
+		});
   	}
 
   	function showEmptyJobPopup(){
