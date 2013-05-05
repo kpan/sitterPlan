@@ -13,7 +13,7 @@ def css(request):
 def contacts(request, username):
 	try:
 		p = ParentUser.objects.get(username=username)
-		contacts = [s.username + ' (' + s.name + ')<br/>\n' for s in p.sitterContacts.all()]
-		return HttpResponse(''.join(contacts))
+		contacts = [s.username + ',' + s.name for s in p.sitterContacts.all()]
+		return HttpResponse('\n'.join(contacts))
 	except:
 		return HttpResponse('Error: No parent exists with username ' + username)

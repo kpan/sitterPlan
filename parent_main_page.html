@@ -221,8 +221,33 @@
 									 draggable:false,
 									 width:800, 
 									 height:600}).addClass("bodyFont").append($("#createJobPageOne"));
+		makeSitterChecklist();
 		makeSlider();
   	}
+	
+	function getSitterList(callback) {
+		$.get("contacts/smith", function(data) {
+			var list = data.split('\n');
+			var finalList = [];
+			for (var sitter in list){
+				var info = list[sitter].split(',');
+				finalList.push({username:info[0], name:info[1]});
+			}
+			callback(finalList);
+		});
+	}
+	
+	function makeSitterChecklist(){
+		getSitterList(function(sitters) {
+			var lines = [];
+			for (var sitter in sitters) {
+				lines.push("<input type='checkbox' name='babysitters' checked='checked' id='" +
+						   sitters[sitter].username + "' value='" + sitters[sitter].name + "'/><label for='" + 
+						   sitters[sitter].username + "'>" + sitters[sitter].name + "</label><br/>");
+			}
+			$('#sitterChecklist').html(lines.join('\n'));
+		});
+	}
 	
 	// show the contacts managing popup
 	function showManageContacts(){
@@ -280,7 +305,12 @@
 <div id="hidingDiv" style="display:none;">
     <div id="createJobPopup" style="-webkit-user-select:none;-moz-user-select:none;"></div>
 	<div id="createJobPageOne" style="-webkit-user-select:none;-moz-user-select:none;">
-		<p>Step 1 of 2: Pick times for the job by painting the calendar.</p>
+    	<table width="100%"><tr>
+        	<td align="left"><input type="button" class="bigButton" value="Cancel" onclick="$('#createJobPopup').dialog('close')"/></td>
+         	<td align="center"><h2>Step 1 of 2: Times</h2></td>
+        	<td align="right"><input type="button" class="bigButton" value="Next >" onclick="nextDialog()"/></td>
+        </tr></table>
+        <p>Paint the calendar to pick times for the job.</p>
 		<table>
         	<tr>
             	<td valign="top"><div id="timerange-slider"></div></td>
@@ -303,48 +333,37 @@
         	</tr>
         </table>
 		<br/>
-        <table><tr><td>
-        	<div style="font-size:small">
-				<input type="radio" name="flexibility" id="rigidButton" checked="checked" 
-        	   		   value="rigid" onchange="toggleFlexVisibility()"/> 
-                <label for="rigidButton">I want a babysitter for the entire time I've painted.</label><br/>
-				<input type="radio" name="flexibility" id="flexibleButton"
-        	   		   value="flexible" onchange="toggleFlexVisibility()"/> 
-               	<label for="flexibleButton">I want a babysitter for only part of the time I've painted:</label><br/>
-					   <div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
-					   		<input type="text" name="jobLength" id="jobLength" value="2" 
-            	   				   style="text-align:right;width:2em;"/> 
-                   				   hours sometime within what I've painted.
-					   </div>
-        	</div></td>
-        <td style="vertical-align:top"><input type="button" name="next" value="Next" onclick="nextDialog()"/></td></tr></table>
-
+        <div style="font-size:small">
+            <input type="radio" name="flexibility" id="rigidButton" checked="checked" 
+                   value="rigid" onchange="toggleFlexVisibility()"/> 
+            <label for="rigidButton">I want a babysitter for the entire time I've painted.</label><br/>
+            <input type="radio" name="flexibility" id="flexibleButton"
+                   value="flexible" onchange="toggleFlexVisibility()"/> 
+            <label for="flexibleButton">I want a babysitter for only part of the time I've painted:</label><br/>
+                   <div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
+                        <input type="text" name="jobLength" id="jobLength" value="2" 
+                               style="text-align:right;width:2em;"/> 
+                               hours sometime within what I've painted.
+                   </div>
+        </div>
 	</div>
 
     <div id="createJobPageTwo" style="-webkit-user-select:none;-moz-user-select:none;">
-		<p>Step 2 of 2: Add a description to your job and send it to your babysitters.</p>
+    	<table width="100%"><tr>
+        	<td align="left"><input type="button" class="bigButton" name="back" value="< Back" onclick="firstDialog()"/></td>
+         	<td align="center"><h2>Step 2 of 2: Details</h2></td>
+        	<td align="right"><input type="button" class="bigButton" name="next" value="Create!" onclick="submitJob()"/></td>
+        </tr></table>
         <table><tr><td>Job title:</td><td><input type="text" id="jobTitle" name="jobTitle"/></td></tr>
         	   <tr><td>Time:     </td><td><span id="jobTime"></span></td></tr>
 			   <!--<tr><td align=right>Date:     </td><td><span id="jobTime"></span></td></tr>-->
         	   <tr><td>Details:  </td><td><textarea id="jobDetails" name="jobDetails"></textarea></td></tr></table>
         <p>Babysitters to tell about the job:</p>
-		<div>
-        	<input type="checkbox" name="babysitters" checked="checked" id="Jimmy_Peterson" value="Jimmy Peterson"/>
-            <label for="Jimmy_Peterson">Jimmy Peterson</label><br/>
-            <input type="checkbox" name="babysitters" checked="checked" id="Susie_Smith" value="Susie Smith"/>
-            <label for="Susie_Smith">Susie Smith</label><br/>
-            <input type="checkbox" name="babysitters" checked="checked" id="Mark_Williamson" value="Mark Williamson"/>
-            <label for="Mark_Williamson">Mark Williamson</label><br/>
-            <input type="checkbox" name="babysitters" checked="checked" id="Jennifer_Wu" value="Jennifer Wu"/>
-            <label for="Jennifer_Wu">Jennifer Wu</label><br/>
-		</div>
-		<p></p>
-        <table><tr><td><input type="button" name="back" value="Go Back" onclick="firstDialog()"/></td>
-        		   <td><input type="button" name="next" value="Post Job" onclick="submitJob()"/></td></tr></table>
+		<div id="sitterChecklist"></div>
 	</div>
 
-	<div id="emptyJobPopup" title="">
-		<p>You cannot create a job with no times selected</p>
+	<div id="emptyJobPopup" title="Error">
+		<p>You cannot create a job with no times selected.</p>
 		<table>
 			<td>
 				<tr> <input align="top" type="button" name="ok" value="Ok" onclick="$('#emptyJobPopup').dialog('close')"/> </tr>
