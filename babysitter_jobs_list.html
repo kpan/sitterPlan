@@ -198,6 +198,10 @@
 	
 	function showApplyJobPopup(){
       	$("#applyJobPopup").dialog()	}
+
+    function clearSchedule(){
+    	babysitterScheduleTable.clearAll();
+    }
 	
 </script>
 
@@ -318,7 +322,9 @@
         </table>
 		<br/>
         <table><tr>
-        <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td></tr></table>
+        <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td>
+        <td><input align="top" type="button" name="clear" value="Clear" onclick="clearSchedule()"/></td></tr>
+    </table>
 	</div>
 	<div id="applyJobPopup" title="">
 		<p>Do you want to apply to the job?</p>

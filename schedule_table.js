@@ -102,4 +102,15 @@ var ScheduleTable = function(height, width) {
 			this.allHandlers[eventType] = [];
 		this.allHandlers[eventType].push(handler);
 	}
+
+	this.clearAll = function() {
+		for (var i = 0; i < this.width; i ++) {
+			for (var j = 0; j < this.height; j++) {
+				if (this.getColor(i, j) != "blank") {
+					this.paint(i, j, "blank");
+				} 
+			}
+		}
+	}
+
 }
