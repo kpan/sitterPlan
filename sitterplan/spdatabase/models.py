@@ -17,9 +17,19 @@ class SitterUser(models.Model):
 	
 class Job(models.Model):
 	title = models.CharField(max_length=200)
+	description = models.CharField(max_length=10000)
 	creator = models.ForeignKey(ParentUser, related_name="jobs")
-	sitter = models.ForeignKey(SitterUser, related_name="jobsAccepted")
-	applicants = models.ManyToManyField(SitterUser, related_name="jobsAppliedFor")
+	sitter = models.ForeignKey(SitterUser, related_name="jobsAccepted", blank="True", null="True")
+	applicants = models.ManyToManyField(SitterUser, blank="True", null="True", related_name="jobsAppliedFor")
+	viewers = models.ManyToManyField(SitterUser, blank="True", null="True", related_name="jobsKnownOf")
+	flexible = models.BooleanField()
+	length = models.IntegerField()
 	
 	def __unicode__(self):
 		return self.title + " created by " + str(self.creator)
+
+class JobTimeRange(models.Model):
+	startTime = models.DateTimeField()
+	endTime = models.DateTimeField()
+	job = models.ForeignKey(Job, related_name="timeRanges")
+	

@@ -152,7 +152,6 @@
 	
 	// close the dialog, clear all its data, make a new row in the jobs list
 	function submitJob() {
-
 		if (getJobTimes() == ""){
 			showEmptyJobPopup();
 		}
@@ -161,36 +160,60 @@
 				showEmptyTitlePopup();
 			}
 			else{
-				$("#jobTable > tbody > tr:last").after("<tr><td><a href = 'javascript:none;'>" + $("#jobTitle").val() +
-						"</a></td><td>" + getJobTimes() + "</td><td>No applicants yet</td></tr>");
-				parentScheduleTable.clear();
-				$("#jobTitle").val("");
-				$("#jobDetails").val("");
-				
-				$("#flexibleSchedule").addClass('invisible');
-				document.getElementById("rigidButton").checked = true;
-				$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
+				$.post("postJob", {title:$("#jobTitle").val(),
+								   description:$("#jobDetails").val(),
+								   flexible:document.getElementById("flexibleButton").checked,
+								   timePeriod:$("#jobLength").val(),
+								   creator:"smith",
+								   viewers:getViewersList(),
+								   times:getJobTimesList(),
+								   },
+								   function(response){$("#jobTable").html(response);});
+				clearJobCreationPopup();
 				$("#createJobPopup").dialog('close');
 			}
 		}
 	}
 	
-	// get the times that are painted over, as a string
-	function getJobTimes() {
-		var time = "";
-		var separator = " and ";
-		if (document.getElementById("flexibleButton").checked) {
-			time += $("#jobLength").val() + " hours within ";
-			separator = " or ";
+	function clearJobCreationPopup() {
+		parentScheduleTable.clear();
+		$("#jobTitle").val("");
+		$("#jobDetails").val("");
+		$("#flexibleSchedule").addClass('invisible');
+		document.getElementById("rigidButton").checked = true;
+		$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
+	}
+
+	function getViewersList() {
+		var viewers = []
+		var inputlist = $("#sitterChecklist > input")
+		for (var input in inputlist){
+			if (inputlist[input].checked){
+				viewers.push(inputlist[input].id);
+			}
 		}
-		var outputstrings = [];
+		return viewers;
+	}
+	
+	function getJobTimesList() {
+		var time = [];
 		var timeblocks = parentScheduleTable.getTimeblocks();
 		for (var i = 0; i < timeblocks.length; i++) {
 			var block = timeblocks[i];
-			outputstrings.push($("#day" + block.start.day).text() + " " + as12HourTime(block.start.hour) 
-									 + " to " + as12HourTime(block.end.hour));
+			var startDate = new Date();
+			startDate.setDate(earliestDateOnSchedule.getDate() + block.start.day);
+			startDate.setHours(block.start.hour);
+			
+			var endDate = new Date();
+			endDate.setDate(earliestDateOnSchedule.getDate() + block.end.day);
+			endDate.setHours(block.end.hour);
+			
+			time.push(startDate.getFullYear() + " " + startDate.getMonth() + " " + 
+					  startDate.getDate() + " " + startDate.getHours() + " " +
+					  endDate.getFullYear() + " " + endDate.getMonth() + " " +
+					  endDate.getDate() + " " + endDate.getHours());
 		}
-		return time + outputstrings.join(separator);
+		return time;
 	}
 	
 	// show or hide the div that lets you put in how many hours the job is
