@@ -14,139 +14,8 @@
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <script type="text/javascript" src="schedule_table.js"></script>
 
-<script>
-	var earliestTimeOnSchedule = 13;
-	var latestTimeOnSchedule = 24;
-	var currentColor = "green";
-
-	var parentScheduleTable = new ScheduleTable(24, 7);
-	
-	parentScheduleTable.addEventListener('paint',function (e) {
-		if (e.details.newColor == "green") {
-			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'greenScheduleTableSquare');
-		} else if (e.details.newColor == "blank") {
-			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'blankScheduleTableSquare');
-		}
-    },true);
-	
-	$(function() {
-		$( "#startTime").text(as12HourTime(earliestTimeOnSchedule));
-		$( "#endTime").text(as12HourTime(latestTimeOnSchedule));
-		for (var i = earliestTimeOnSchedule; i < latestTimeOnSchedule; i ++){
-			$("#parentScheduleTable > tbody > tr:last").after(genRow(i));
-		}
-		
-		$( "#createJob").addClass("h2");
-		$( "#manageContacts").addClass("h2");
-		
-    	$( "#timerange-slider" ).slider({range: true, min: 0, max:24,
-									 orientation:"vertical",
-									 values:[ 24 - latestTimeOnSchedule,
-									 		  24 - earliestTimeOnSchedule ],
-									 slide: function( event, ui ) {
-										 		updateTimerange( 24 - ui.values[1],
-												           24 - ui.values[0]);
-									 }}).height("300px");
-		$( "#timerange-slider > a:first").text(asShort12HourTime(latestTimeOnSchedule)).addClass("sliderLabel");
-		$( "#timerange-slider > a:last").text(asShort12HourTime(earliestTimeOnSchedule)).addClass("sliderLabel");
-  	});
-	
-	function paintIfClicking(event, day, time) {
-		if (event.which == 1) {
-			parentScheduleTable.paint(day, time, currentColor);
-		}
-	}
-
-	function genRow(time) {
-		var row = "<tr class='scheduleTableRow' id='" + as12HourTime(time) + "row" + 
-				  "'>\n<td class='scheduleRowLabel'>";
-		row += as12HourTime(time) + "</td>\n";
-		for (var day = 0; day < parentScheduleTable.width; day ++) {
-			row += "<td class='";
-			row += parentScheduleTable.getColor(day,time) + "ScheduleTableSquare";
-			row += "' id='" + day + "_" + time + "_square' ";
-			row += "onmousedown='paintIfClicking(event," + day + "," + time + ")' ";
-			row += "onmouseover='paintIfClicking(event," + day + "," + time + ")'/>\n";
-		}
-		row += "</tr>\n"
-		return row;
-	}
-		
-	function updateTimerange(startTime, endTime){
-		$( "#startTime").text(as12HourTime(startTime));
-		$( "#endTime").text(as12HourTime(endTime));
-		
-		$( "#timerange-slider > a:first").text(asShort12HourTime(endTime));
-		$( "#timerange-slider > a:last").text(asShort12HourTime(startTime));
-		
-		for (var i = earliestTimeOnSchedule; i < startTime; i++) {
-			$("#" + as12HourTime(i) + "row").remove();
-		}
-		
-		for (var i = startTime; i < endTime; i ++){
-			if (i < earliestTimeOnSchedule || i >= latestTimeOnSchedule) {
-				$("#parentScheduleTable > tbody > tr").eq(i - startTime).after(genRow(i));
-			}
-		}
-		for (var i = endTime; i < latestTimeOnSchedule; i++) {
-			$("#" + as12HourTime(i) + "row").remove();
-		}
-		earliestTimeOnSchedule = startTime;
-		latestTimeOnSchedule = endTime;
-	}
-	
-	function as12HourTime(number) {
-		if (number == 0 || number == 24) {
-			return "midnight";
-		}
-		if (number < 12) {
-			return number + "am";
-		}
-		if (number == 12) {
-			return "noon";
-		} else {
-			return (number - 12) + "pm";
-		}
-	}	
-
-	function asShort12HourTime(number) {
-		if (number == 0) {
-			return 12;
-		}
-		if (number <= 12) {
-			return number;
-		}
-		return number - 12;
-	}	
-
-	function showCreateJob(){
-      	$("#createJobPopup").dialog({title:"Edit Schedule",
-									 modal:true, 
-									 draggable:false, 
-									 width:800, 
-									 height:600}).addClass("bodyFont");
-  	}
-	
-	function showManageContacts(){
-      	$("#manageContactsPopup").dialog({title:"Manage Contacts",
-									 modal:true, 
-									 draggable:false, 
-									 width:800, 
-									 height:600}).addClass("bodyFont");
-  	}
-	
-	function toggleFlexVisibility(){
-		$("#flexibleSchedule").toggleClass('invisible');
-	}
-</script>
-
 <title>SitterPlan</title>
 </head>
-
-
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-<script type="text/javascript" src="schedule_table.js"></script>
 <script>
 	//the times on the schedule to display (controlled by the slider)
 	var earliestTimeOnSchedule = 13;
@@ -288,6 +157,8 @@
 	
 	// close the dialog, clear all its data, make a new row in the jobs list
 	function submitSchedule() {
+		$.post("schedule/jimmy/", {times:babysitterScheduleTable.getPostableTimeblocks(earliestDateOnSchedule)}, 
+			   function(data){alert(data);});
 		$("#hidingDiv").append($("#editSchedulePopup").remove());
 		$("#editSchedulePopup").dialog('close');
 	}
@@ -448,7 +319,7 @@
 		</tr>
 		<tr>
 			<td  style="width:10%;"></td>
-			<td class="freeSquare"  style="width:10%;"> Avalible </td>
+			<td class="freeSquare"  style="width:10%;"> Available </td>
 			<td class="nonfreeSquare"  style="width:10%;"> Busy </td>
 			<td class="freeSquare"  style="width:10%;"> <div class="acceptedSingleSquare"> Accepted Job</div></td>
 			<td class="freeSquare"  style="width:10%;"> <div class="availableSingleSquare">Available Job</div></td>
