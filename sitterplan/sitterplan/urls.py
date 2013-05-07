@@ -10,12 +10,17 @@ from spdatabase import genericViews
 
 urlpatterns = patterns('',
 	url(r'^parent/contacts/(?P<username>[^/]*)/$', parentViews.contacts, name="parentContacts"),
-	url(r'^sitter/contacts/(?P<username>[^/]*)/$', sitterViews.contacts, name="sitterContacts"),
 	url(r'^parent/$', parentViews.main, name="parentMain"),
 	url(r'^parent/postJob$', parentViews.postJob, name="parentPost"),
+	url(r'^parent/jobTable/(?P<username>[^/]*)/$', parentViews.jobTable, name="parentJobTable"),
+	url(r'^parent/jobInfo/(?P<jobNumber>[^/]*)/$', parentViews.jobInfo, name="parentJobInfo"),
+	url(r'^parent/deleteJob/(?P<jobNumber>[^/]*)/$', parentViews.deleteJob, name="parentDeleteJob"),
+	url(r'^parent/css$', parentViews.css, name="parentCss"),
+	
+	url(r'^sitter/contacts/(?P<username>[^/]*)/$', sitterViews.contacts, name="sitterContacts"),
 	url(r'^sitter/list$', sitterViews.jobs_list, name="sitterJobsList"),
 	url(r'^sitter/calendar$', sitterViews.apply_jobs, name="sitterJobsCalendar"),
-	url(r'^parent/css$', parentViews.css, name="parentCss"),
+	
 	url(r'^.*/sitterPlan.css$', genericViews.css, name="genericCss"),
 	url(r'^.*/schedule_table.js$', genericViews.scheduleTable, name="genericScheduleTable"),
     # Examples:

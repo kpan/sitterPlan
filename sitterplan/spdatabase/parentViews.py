@@ -36,12 +36,25 @@ def postJob(request):
 	return jobTable(request, dict["creator"])
 	
 def jobTable(request, username):
-	table = "<table>\n"
+	table = "<table id='jobTable'>\n"
 	for job in ParentUser.objects.get(username=username).jobs.all():
-		table += "<tr><td><a href = 'jobinfo/" + str(job.id) + "'>" + job.title + "</a></td>\n"
+		table += "<tr><td><a href = 'javascript:info(" + str(job.id) + ")'>" + job.title + "</a></td>\n"
 		table += "<td>" + ppJobTimes(job) + "</td>\n<td>" + ppJobApplicants(job) + "</td></tr>\n"
 	table += "</table>"
 	return HttpResponse(table)
+
+def jobInfo(request, jobNumber):
+	job = Job.objects.get(id=jobNumber)
+	info = "<h2>" + job.title + "</h2>"
+	info += "<p>" + job.description + "</p>"
+	info += "<center><button onclick='delJob("+jobNumber+")'>Delete Job</button></center>"
+	return HttpResponse(info)
+	
+def deleteJob(request, jobNumber):
+	job = Job.objects.get(id=jobNumber)
+	creator = job.creator.username
+	job.delete()
+	return jobTable(request, creator)
 	
 def ppJobTimes(job):
 	time = ""

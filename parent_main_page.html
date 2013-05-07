@@ -55,6 +55,9 @@
 		
 		// initialize the slider for which times are showing
 		makeSlider();
+		$.get("jobTable/smith", function(data) {
+			$("#jobTable").html(data);
+		});
   	});
 	
 	//initialize the slider for which times are showing.
@@ -216,6 +219,26 @@
 		return time;
 	}
 	
+	// get the times that are painted over, as a string
+ 	function getJobTimes() {
+ 		var time = "";
+ 		var separator = " and ";
+ 		if (document.getElementById("flexibleButton").checked) {
+ 			time += $("#jobLength").val() + " hours within ";
+			separator = " or ";
+		}
+		var outputstrings = [];
+		var timeblocks = parentScheduleTable.getTimeblocks();
+ 		for (var i = 0; i < timeblocks.length; i++) {
+ 			var block = timeblocks[i];
+			outputstrings.push($("#day" + block.start.day).text() + " " + as12HourTime(block.start.hour) 
+								+ " to " + as12HourTime(block.end.hour));
+		}
+		return time + outputstrings.join(separator);
+	}
+
+
+	
 	// show or hide the div that lets you put in how many hours the job is
 	function toggleFlexVisibility(){
 		$("#flexibleSchedule").toggleClass('invisible');
@@ -233,6 +256,16 @@
 	function firstDialog() {
 		makeSlider();
 		$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").replaceWith($("#createJobPageOne")));
+	}
+	
+	function info(jobnumber) {
+		popup = jQuery('<div/>', {id: 'jobPopup_' + jobnumber}).dialog({title:"Job Details"});
+		$.get("jobInfo/" + jobnumber, function(data) {popup.html(data);});
+	}
+	
+	function delJob(jobnumber) {
+		$("#jobPopup_" + jobnumber).dialog('close');
+		$.post("deleteJob/" + jobnumber + "/", function(response){$("#jobTable").html(response);});
 	}
 
 	// show the job creation popup
@@ -307,14 +340,7 @@
 <div id="mainDiv">
 	<div id="jobsText">
 		<h2>My Jobs</h2>
-		<table id="jobTable">
-   			<tr><td><a href = "javascript:none;">Watch Bobby</a></td>
-    			<td>Fri Apr 19 5pm to 10pm</td>
-        		<td>Hired Jimmy</td></tr>
-    		<tr><td><a href = "javascript:none;">Watch Susie</a></td>
-    			<td>Tue Apr 23 8pm to 10pm</td>
-        		<td><a href = "javascript:none;">2 Applicants</a></td></tr>
-		</table>
+		<div id="jobTable"></div>
 	</div>
 	<div id="manageContactsPopup" style="display:none;">
 		<span>Search for new contacts<span>
