@@ -312,8 +312,12 @@
 									 draggable:false, 
 									 width:800, 
 									 height:600}).addClass("bodyFont");
-		$.get('contacts/smith', function(data) {
-			$("#contactList").html(data);
+		getSitterList(function(sitters) {
+			var lines = [];
+			for (var sitter in sitters) {
+				lines.push(sitters[sitter].username + " (" + sitters[sitter].name + ")<br/>");
+			}
+			$('#contactList').html(lines.join('\n'));
 		});
   	}
 
