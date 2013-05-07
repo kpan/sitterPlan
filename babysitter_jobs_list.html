@@ -292,6 +292,19 @@
 		$("#editSchedulePopup").dialog('close');
 	}
 	
+	// clears the schedule in the dialog.
+	function clearSchedule() {
+		var timeblocks = babysitterScheduleTable.getTimeblocks();
+		for (var i = 0; i < timeblocks.length; i++) {
+			var block = timeblocks[i];
+			for(var day = block.start.day; day <= block.end.day; day++) {
+				for(var time = earliestTimeOnSchedule; time <= latestTimeOnSchedule; time++) {
+					babysitterScheduleTable.paint(day, time, "blank");
+				}
+			}
+		}
+	}
+	
 	// get the times that are painted over, as a string
 	function getFreeTimes() {
 		var time = "";
@@ -424,7 +437,10 @@
 <div id="hidingDiv" style="display:none;">
     <div id="editSchedulePopup" style="-webkit-user-select:none;-moz-user-select:none;"></div>
 	<div id="editSchedulePageOne" style="-webkit-user-select:none;-moz-user-select:none;">
-		<p>Pick times you are free by painting the calendar.</p>
+		<table style="width:100%;">
+		<tr><td>Pick times you are free by painting the calendar.</td>
+		<td><input align="top" type="button" name="clearAll" value="Clear All" onclick="clearSchedule()"/> </td></tr>
+		<table>
 		<table>
         	<tr>
             	<td valign="top"><div id="timerange-slider"></div></td>
