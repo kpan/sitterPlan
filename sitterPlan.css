@@ -101,6 +101,7 @@ body {
 
 .availableTop{
 	background-color:hsl(125,80%,65%);
+	height:22px;
 	margin: 0px 5px;
 	padding: 0px 5px;
 	-moz-border-top-left-radius: 15px;
@@ -110,11 +111,13 @@ body {
 }
 .availableMiddle{
 	background-color:hsl(125,80%,65%);
+	height:22px;
 	margin: 0px 5px;
 	padding: 0px 5px;
 }
 .availableBottom{
 	background-color:hsl(125,80%,65%);
+	height:22px;
 	margin: 0px 5px;
 	padding: 0px 5px;
 	-moz-border-bottom-left-radius: 15px;
@@ -124,6 +127,7 @@ body {
 }
 .availableSingleSquare{
 	background-color:hsl(125,80%,65%);
+	height:22px;
 	margin: 0px 5px;
 	padding: 0px 5px;
 	-moz-border-top-left-radius: 15px;
@@ -137,6 +141,7 @@ body {
 }
 .acceptedTop{
 	background-color:hsl(125,30%,50%);
+	height:22px;
 	margin: 0px 5px;
 	padding: 0px 5px;
 	-moz-border-top-left-radius: 15px;
@@ -146,11 +151,13 @@ body {
 }
 .acceptedMiddle{
 	background-color:hsl(125,30%,50%);
+	height:22px;
 	margin: 0px 5px;
 	padding: 0px 5px;
 }
 .acceptedBottom{
 	background-color:hsl(125,30%,50%);
+	height:22px;
 	margin: 0px 5px;
 	padding: 0px 5px;
 	-moz-border-bottom-left-radius: 15px;
@@ -160,6 +167,7 @@ body {
 }
 .acceptedSingleSquare{
 	background-color:hsl(125,30%,50%);
+	height:22px;
 	margin: 0px 5px;
 	padding: 0px 5px;
 	-moz-border-top-left-radius: 15px;
