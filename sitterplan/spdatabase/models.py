@@ -32,4 +32,10 @@ class JobTimeRange(models.Model):
 	startTime = models.DateTimeField()
 	endTime = models.DateTimeField()
 	job = models.ForeignKey(Job, related_name="timeRanges")
+
+class SitterFreeTimeRange(models.Model):
+	sitter = models.ForeignKey(SitterUser, related_name="freeTimeRanges")
+	startTime = models.DateTimeField()
+	endTime = models.DateTimeField()
+	
 	

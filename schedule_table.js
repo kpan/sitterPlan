@@ -50,6 +50,27 @@ var ScheduleTable = function(height, width) {
 		return timeblocks;
 	}
 	
+	this.getPostableTimeblocks = function(earliestDateOnSchedule) {
+		var time = [];
+		var timeblocks = this.getTimeblocks();
+		for (var i = 0; i < timeblocks.length; i++) {
+			var block = timeblocks[i];
+			var startDate = new Date();
+			startDate.setDate(earliestDateOnSchedule.getDate() + block.start.day);
+			startDate.setHours(block.start.hour);
+			
+			var endDate = new Date();
+			endDate.setDate(earliestDateOnSchedule.getDate() + block.end.day);
+			endDate.setHours(block.end.hour);
+			
+			time.push(startDate.getFullYear() + " " + startDate.getMonth() + " " + 
+					  startDate.getDate() + " " + startDate.getHours() + " " +
+					  endDate.getFullYear() + " " + endDate.getMonth() + " " +
+					  endDate.getDate() + " " + endDate.getHours());
+		}
+		return time;
+	}
+	
 	this.getColor = function(day, hour) {
 		if (this.days[day][hour] == null) {
 			return "blank";
@@ -81,4 +102,15 @@ var ScheduleTable = function(height, width) {
 			this.allHandlers[eventType] = [];
 		this.allHandlers[eventType].push(handler);
 	}
+
+	this.clearAll = function() {
+		for (var i = 0; i < this.width; i ++) {
+			for (var j = 0; j < this.height; j++) {
+				if (this.getColor(i, j) != "blank") {
+					this.paint(i, j, "blank");
+				} 
+			}
+		}
+	}
+
 }

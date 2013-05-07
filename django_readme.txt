@@ -36,4 +36,4 @@ As far as I can tell, if you change the models.py file to restructure the databa
 
 python sitterplan/manage.py syncdb
 
-to recreate it.
+to recreate it.  Then you must enter all the contacts again.  Maybe if I have to do this again more than twice I'll write a python file that does it.

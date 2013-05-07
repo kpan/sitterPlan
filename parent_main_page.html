@@ -169,7 +169,7 @@
 								   timePeriod:$("#jobLength").val(),
 								   creator:"smith",
 								   viewers:getViewersList(),
-								   times:getJobTimesList(),
+								   times:parentScheduleTable.getPostableTimeblocks(earliestDateOnSchedule),
 								   },
 								   function(response){$("#jobTable").html(response);});
 				clearJobCreationPopup();
@@ -198,27 +198,6 @@
 		return viewers;
 	}
 	
-	function getJobTimesList() {
-		var time = [];
-		var timeblocks = parentScheduleTable.getTimeblocks();
-		for (var i = 0; i < timeblocks.length; i++) {
-			var block = timeblocks[i];
-			var startDate = new Date();
-			startDate.setDate(earliestDateOnSchedule.getDate() + block.start.day);
-			startDate.setHours(block.start.hour);
-			
-			var endDate = new Date();
-			endDate.setDate(earliestDateOnSchedule.getDate() + block.end.day);
-			endDate.setHours(block.end.hour);
-			
-			time.push(startDate.getFullYear() + " " + startDate.getMonth() + " " + 
-					  startDate.getDate() + " " + startDate.getHours() + " " +
-					  endDate.getFullYear() + " " + endDate.getMonth() + " " +
-					  endDate.getDate() + " " + endDate.getHours());
-		}
-		return time;
-	}
-	
 	// get the times that are painted over, as a string
  	function getJobTimes() {
  		var time = "";
@@ -236,8 +215,6 @@
 		}
 		return time + outputstrings.join(separator);
 	}
-
-
 	
 	// show or hide the div that lets you put in how many hours the job is
 	function toggleFlexVisibility(){
@@ -247,9 +224,15 @@
 	
 	// go to the second dialog
 	function nextDialog() {
-		$("#hidingDiv").append($("#createJobPopup > #createJobPageOne").replaceWith($("#createJobPageTwo")));
-		$("#jobTime").text(getJobTimes);
-		$("#jobTitle").focus();
+		if (getJobTimes() == ""){
+			console.log("empty job");
+			showEmptyJobPopup();
+		}
+		else{
+			$("#hidingDiv").append($("#createJobPopup > #createJobPageOne").replaceWith($("#createJobPageTwo")));
+			$("#jobTime").text(getJobTimes);
+			$("#jobTitle").focus();
+		}
 	}
 	
 	// go to the first dialog

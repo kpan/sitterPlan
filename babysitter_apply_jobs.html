@@ -14,139 +14,8 @@
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 <script type="text/javascript" src="schedule_table.js"></script>
 
-<script>
-	var earliestTimeOnSchedule = 13;
-	var latestTimeOnSchedule = 24;
-	var currentColor = "green";
-
-	var parentScheduleTable = new ScheduleTable(24, 7);
-	
-	parentScheduleTable.addEventListener('paint',function (e) {
-		if (e.details.newColor == "green") {
-			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'greenScheduleTableSquare');
-		} else if (e.details.newColor == "blank") {
-			$( "#" + e.details.day + "_" + e.details.hour + "_square").attr('class', 'blankScheduleTableSquare');
-		}
-    },true);
-	
-	$(function() {
-		$( "#startTime").text(as12HourTime(earliestTimeOnSchedule));
-		$( "#endTime").text(as12HourTime(latestTimeOnSchedule));
-		for (var i = earliestTimeOnSchedule; i < latestTimeOnSchedule; i ++){
-			$("#parentScheduleTable > tbody > tr:last").after(genRow(i));
-		}
-		
-		$( "#createJob").addClass("h2");
-		$( "#manageContacts").addClass("h2");
-		
-    	$( "#timerange-slider" ).slider({range: true, min: 0, max:24,
-									 orientation:"vertical",
-									 values:[ 24 - latestTimeOnSchedule,
-									 		  24 - earliestTimeOnSchedule ],
-									 slide: function( event, ui ) {
-										 		updateTimerange( 24 - ui.values[1],
-												           24 - ui.values[0]);
-									 }}).height("300px");
-		$( "#timerange-slider > a:first").text(asShort12HourTime(latestTimeOnSchedule)).addClass("sliderLabel");
-		$( "#timerange-slider > a:last").text(asShort12HourTime(earliestTimeOnSchedule)).addClass("sliderLabel");
-  	});
-	
-	function paintIfClicking(event, day, time) {
-		if (event.which == 1) {
-			parentScheduleTable.paint(day, time, currentColor);
-		}
-	}
-
-	function genRow(time) {
-		var row = "<tr class='scheduleTableRow' id='" + as12HourTime(time) + "row" + 
-				  "'>\n<td class='scheduleRowLabel'>";
-		row += as12HourTime(time) + "</td>\n";
-		for (var day = 0; day < parentScheduleTable.width; day ++) {
-			row += "<td class='";
-			row += parentScheduleTable.getColor(day,time) + "ScheduleTableSquare";
-			row += "' id='" + day + "_" + time + "_square' ";
-			row += "onmousedown='paintIfClicking(event," + day + "," + time + ")' ";
-			row += "onmouseover='paintIfClicking(event," + day + "," + time + ")'/>\n";
-		}
-		row += "</tr>\n"
-		return row;
-	}
-		
-	function updateTimerange(startTime, endTime){
-		$( "#startTime").text(as12HourTime(startTime));
-		$( "#endTime").text(as12HourTime(endTime));
-		
-		$( "#timerange-slider > a:first").text(asShort12HourTime(endTime));
-		$( "#timerange-slider > a:last").text(asShort12HourTime(startTime));
-		
-		for (var i = earliestTimeOnSchedule; i < startTime; i++) {
-			$("#" + as12HourTime(i) + "row").remove();
-		}
-		
-		for (var i = startTime; i < endTime; i ++){
-			if (i < earliestTimeOnSchedule || i >= latestTimeOnSchedule) {
-				$("#parentScheduleTable > tbody > tr").eq(i - startTime).after(genRow(i));
-			}
-		}
-		for (var i = endTime; i < latestTimeOnSchedule; i++) {
-			$("#" + as12HourTime(i) + "row").remove();
-		}
-		earliestTimeOnSchedule = startTime;
-		latestTimeOnSchedule = endTime;
-	}
-	
-	function as12HourTime(number) {
-		if (number == 0 || number == 24) {
-			return "midnight";
-		}
-		if (number < 12) {
-			return number + "am";
-		}
-		if (number == 12) {
-			return "noon";
-		} else {
-			return (number - 12) + "pm";
-		}
-	}	
-
-	function asShort12HourTime(number) {
-		if (number == 0) {
-			return 12;
-		}
-		if (number <= 12) {
-			return number;
-		}
-		return number - 12;
-	}	
-
-	function showCreateJob(){
-      	$("#createJobPopup").dialog({title:"Edit Schedule",
-									 modal:true, 
-									 draggable:false, 
-									 width:800, 
-									 height:600}).addClass("bodyFont");
-  	}
-	
-	function showManageContacts(){
-      	$("#manageContactsPopup").dialog({title:"Manage Contacts",
-									 modal:true, 
-									 draggable:false, 
-									 width:800, 
-									 height:600}).addClass("bodyFont");
-  	}
-	
-	function toggleFlexVisibility(){
-		$("#flexibleSchedule").toggleClass('invisible');
-	}
-</script>
-
 <title>SitterPlan</title>
 </head>
-
-
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-<script type="text/javascript" src="schedule_table.js"></script>
 <script>
 	//the times on the schedule to display (controlled by the slider)
 	var earliestTimeOnSchedule = 13;
@@ -288,6 +157,8 @@
 	
 	// close the dialog, clear all its data, make a new row in the jobs list
 	function submitSchedule() {
+		$.post("schedule/jimmy/", {times:babysitterScheduleTable.getPostableTimeblocks(earliestDateOnSchedule)}, 
+			   function(data){alert(data);});
 		$("#hidingDiv").append($("#editSchedulePopup").remove());
 		$("#editSchedulePopup").dialog('close');
 	}
@@ -331,6 +202,85 @@
 	
 </script>
 
+<script>
+    //update calendar labels based on date
+    var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    var month = 4; //starts at 0
+    var year = 2013;
+    var day = 5; //date of the Sunday of the week being displayed
+
+    function isLeapYear(year){
+       if (year % 4 != 0) { return false; }
+       if (year % 100 != 0) { return true; }
+       if (year % 400 == 0) { return true; }
+       else{ return false; }
+    }
+
+    function daysInMonth(month){
+        var daysInMonth = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 30, 31);
+        if (month == 1 && isLeapYear(year)){
+            return 29;
+        }
+        else {
+            return daysInMonth[month];
+        }
+    }
+
+    function dateToDisplay(offset){
+        //figures out date offset number of days after Sunday
+        today = day + offset;
+        if (today > daysInMonth(month)){
+            return today - daysInMonth(month);
+        }
+        else{
+            return today
+        }
+    }
+
+    function updateLabels(){
+        $("#sundayLabel").text('Sun ' + day);
+        $("#mondayLabel").text('Mon ' + dateToDisplay(1));
+        $("#tuesdayLabel").text('Tue ' + dateToDisplay(2));
+        $("#wednesdayLabel").text('Wed ' + dateToDisplay(3));
+        $("#thursdayLabel").text('Thurs ' + dateToDisplay(4));
+        $("#fridayLabel").text('Fri ' + dateToDisplay(5));
+        $("#saturdayLabel").text('Sat ' + dateToDisplay(6));
+
+        $("#monthLabel").text(months[month] + ' ' + year);
+    };
+
+    $(function () {updateLabels()});
+
+    function goToNextWeek(){
+        day = day + 7;
+        if (day >  daysInMonth(month)){
+            day = day - daysInMonth(month);
+            month = month + 1;
+            if (month > 11){
+                month = 0;
+                year = year + 1;
+            }
+        }
+        updateLabels();
+    };
+
+
+    function goToPrevWeek(){
+        day = day - 7;
+        if (day <  1){
+            month = month - 1;
+            if (month < 0){
+                month = 11;
+                year = year - 1;
+            }
+            day = day + daysInMonth(month);           
+        }       
+        updateLabels();
+    };
+
+
+</script>
+
 
 <body>
 <div id="logo">SitterPlan</div>
@@ -355,17 +305,17 @@
 </style>
 </head>
 <body>
-<div class="title" align='center'>April 2013</div>
+<div id="monthLabel" class="title" align='center'>April 2013</div>
 <table style="width:90%; border:none">
 	<tr>
     	<th style="width:10%;"></th>
-    	<th style="width:13%;">Sun</th>
-        <th style="width:13%;">Mon</th>
-        <th style="width:13%;">Tue</th>
-        <th style="width:13%;">Wed</th>
-        <th style="width:13%;">Thu</th>
-        <th style="width:13%;">Fri</th>
-        <th style="width:13%;">Sat</th>
+    	<th id="sundayLabel" style="width:13%;">Sun</th>
+        <th id="mondayLabel" style="width:13%;">Mon</th>
+        <th id="tuesdayLabel" style="width:13%;">Tue</th>
+        <th id="wednesdayLabel" style="width:13%;">Wed</th>
+        <th id="thursdayLabel" style="width:13%;">Thu</th>
+        <th id="fridayLabel" style="width:13%;">Fri</th>
+        <th id="saturdayLabel" style="width:13%;">Sat</th>
     </tr>
 	<tr>
     	<td align='right'>6:00pm</td>
@@ -441,17 +391,20 @@
 </div>
 <div>
 	<p>&nbsp </p>
-	<table  style="width:55%; border:none">
+	<table  style="width:90%; border:none">
 		<tr>
 			<td  style="width:10%;"></td>
 			<td  style="width:10%;"><b> Legend </b></td>
 		</tr>
 		<tr>
 			<td  style="width:10%;"></td>
-			<td class="freeSquare"  style="width:10%;"> Avalible </td>
+			<td class="freeSquare"  style="width:10%;"> Available </td
 			<td class="nonfreeSquare"  style="width:10%;"> Busy </td>
 			<td class="freeSquare"  style="width:10%;"> <div class="acceptedSingleSquare"> Accepted Job</div></td>
 			<td class="freeSquare"  style="width:10%;"> <div class="availableSingleSquare">Available Job</div></td>
+            <td style="width:fill"/>
+            <td style="width:10%;"> <input id="prevWeek" type="button" name="prevWeek" value="previous week" onclick="goToPrevWeek()"/> </td>
+            <td style="width:10%;"> <input id="nextWeek" type="button" name="nextWeek" value="next week" onclick="goToNextWeek()"/> </td>
 		</tr>
 	</table>
 </div>
@@ -502,12 +455,12 @@
         <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td></tr></table>
 	</div>
 	<div id="applyJobPopup" title="">
-		<p>Do you want to apply to the job.</p>
+		<p>Do you want to apply to the job?</p>
 		<!-- need to retrieve job name here-->
 		<table>
 			<td>
 				<tr> <input align="top" type="button" name="ok" value="OK" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
-				<tr><input align="top" type="button" name="cancle" value="Cancle" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
+				<tr><input align="top" type="button" name="cancel" value="Cancel" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
 			</td>
 		</table>
 	</div>
