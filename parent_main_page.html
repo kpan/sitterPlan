@@ -224,9 +224,15 @@
 	
 	// go to the second dialog
 	function nextDialog() {
-		$("#hidingDiv").append($("#createJobPopup > #createJobPageOne").replaceWith($("#createJobPageTwo")));
-		$("#jobTime").text(getJobTimes);
-		$("#jobTitle").focus();
+		if (getJobTimes() == ""){
+			console.log("empty job");
+			showEmptyJobPopup();
+		}
+		else{
+			$("#hidingDiv").append($("#createJobPopup > #createJobPageOne").replaceWith($("#createJobPageTwo")));
+			$("#jobTime").text(getJobTimes);
+			$("#jobTitle").focus();
+		}
 	}
 	
 	// go to the first dialog
