@@ -186,6 +186,19 @@
 		document.getElementById("rigidButton").checked = true;
 		$("#hidingDiv").append($("#createJobPopup > #createJobPageTwo").remove());
 	}
+	
+	// clears the schedule in the dialog.
+	function clearSchedule() {
+		var timeblocks = parentScheduleTable.getTimeblocks();
+		for (var i = 0; i < timeblocks.length; i++) {
+			var block = timeblocks[i];
+			for(var day = block.start.day; day <= block.end.day; day++) {
+				for(var time = earliestTimeOnSchedule; time <= latestTimeOnSchedule; time++) {
+					parentScheduleTable.paint(day, time, "blank");
+				}
+			}
+		}
+	}
 
 	function getViewersList() {
 		var viewers = []
@@ -369,19 +382,22 @@
         	</tr>
         </table>
 		<br/>
-        <div style="font-size:small">
-            <input type="radio" name="flexibility" id="rigidButton" checked="checked" 
-                   value="rigid" onchange="toggleFlexVisibility()"/> 
-            <label for="rigidButton">I want a babysitter for the entire time I've painted.</label><br/>
-            <input type="radio" name="flexibility" id="flexibleButton"
-                   value="flexible" onchange="toggleFlexVisibility()"/> 
-            <label for="flexibleButton">I want a babysitter for only part of the time I've painted:</label><br/>
-                   <div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
-                        <input type="text" name="jobLength" id="jobLength" value="2" 
-                               style="text-align:right;width:2em;"/> 
-                               hours sometime within what I've painted.
-                   </div>
-        </div>
+		<table style="width:100%"><tr>
+			<td><div style="font-size:small">
+				<input type="radio" name="flexibility" id="rigidButton" checked="checked" 
+					   value="rigid" onchange="toggleFlexVisibility()"/> 
+				<label for="rigidButton">I want a babysitter for the entire time I've painted.</label><br/>
+				<input type="radio" name="flexibility" id="flexibleButton"
+					   value="flexible" onchange="toggleFlexVisibility()"/> 
+				<label for="flexibleButton">I want a babysitter for only part of the time I've painted:</label><br/>
+					   <div id="flexibleSchedule" class="invisible" style="margin-left:5em;">
+							<input type="text" name="jobLength" id="jobLength" value="2" 
+								   style="text-align:right;width:2em;"/> 
+								   hours sometime within what I've painted.
+					   </div>
+			</div></td>
+			<td><input align="top" type="button" name="clearAll" value="Clear All" onclick="clearSchedule()"/> </td>
+		</tr></table>
 	</div>
 
     <div id="createJobPageTwo" style="-webkit-user-select:none;-moz-user-select:none;">

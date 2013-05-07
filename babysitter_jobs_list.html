@@ -162,6 +162,19 @@
 		$("#editSchedulePopup").dialog('close');
 	}
 	
+	// clears the schedule in the dialog.
+	function clearSchedule() {
+		var timeblocks = babysitterScheduleTable.getTimeblocks();
+		for (var i = 0; i < timeblocks.length; i++) {
+			var block = timeblocks[i];
+			for(var day = block.start.day; day <= block.end.day; day++) {
+				for(var time = earliestTimeOnSchedule; time <= latestTimeOnSchedule; time++) {
+					babysitterScheduleTable.paint(day, time, "blank");
+				}
+			}
+		}
+	}
+	
 	// get the times that are painted over, as a string
 	function getFreeTimes() {
 		var time = "";
@@ -198,6 +211,10 @@
 	
 	function showApplyJobPopup(){
       	$("#applyJobPopup").dialog()	}
+
+    function clearSchedule(){
+    	babysitterScheduleTable.clearAll();
+    }
 	
 </script>
 
@@ -221,6 +238,11 @@
 <div id="mainDiv">
 <h2>My Jobs</h2>
 <table style='border:2px solid #000000; width:98%; text-align:center;' cellPadding="10" >
+	<colgroup>
+       <col span="1" style="width: 17%;">
+       <col span="1" style="width: 25%;">
+       <col span="1" style="width: 20%;">
+    </colgroup>
 	<tr>
 		<th class="tableColumnLabel"> Family </td>
 		<th class="tableColumnLabel"> Date </td>
@@ -250,6 +272,11 @@
 </table>
 <h2>Available Jobs</h2>
 <table style='border:2px solid #000000; width:98%; text-align:center;' cellPadding="10" >
+	<colgroup>
+       <col span="1" style="width: 17%;">
+       <col span="1" style="width: 25%;">
+       <col span="1" style="width: 20%;">
+    </colgroup>
 	<tr>
 		<th class="tableColumnLabel"> Family </td>
 		<th class="tableColumnLabel"> Date </td>
@@ -294,7 +321,10 @@
 <div id="hidingDiv" style="display:none;">
     <div id="editSchedulePopup" style="-webkit-user-select:none;-moz-user-select:none;"></div>
 	<div id="editSchedulePageOne" style="-webkit-user-select:none;-moz-user-select:none;">
-		<p>Pick times you are free by painting the calendar.</p>
+		<table style="width:100%;">
+		<tr><td>Pick times you are free by painting the calendar.</td>
+		<td><input align="top" type="button" name="clearAll" value="Clear All" onclick="clearSchedule()"/> </td></tr>
+		<table>
 		<table>
         	<tr>
             	<td valign="top"><div id="timerange-slider"></div></td>
@@ -318,7 +348,9 @@
         </table>
 		<br/>
         <table><tr>
-        <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td></tr></table>
+        <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td>
+        <td><input align="top" type="button" name="cancel" value="Cancel" onclick="$('#editSchedulePopup').dialog('close')"/></td></tr>
+    </table>
 	</div>
 	<div id="applyJobPopup" title="">
 		<p>Do you want to apply to the job?</p>
