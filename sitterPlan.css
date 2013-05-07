@@ -171,3 +171,8 @@ body {
 	border-bottom-left-radius:15px;
 	border-bottom-right-radius:15px;
 }
+
+.tableColumnLabel{
+	font-size: 14pt;
+	text-decoration: underline;
+}
