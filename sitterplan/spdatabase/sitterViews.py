@@ -14,8 +14,8 @@ def jobs_list(request):
 def contacts(request, username):
 	try:
 		s = SitterUser.objects.get(username=username)
-		contacts = [p.username + ' (' + p.name + ')<br/>\n' for p in s.parentContacts.all()]
-		return HttpResponse(''.join(contacts))
+		contacts = [p.username + ',' + p.name for p in s.parentContacts.all()]
+		return HttpResponse('\n'.join(contacts))
 	except:
 		return HttpResponse('Error: No sitter exists with username ' + username)
 

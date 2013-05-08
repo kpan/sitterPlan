@@ -208,7 +208,26 @@
 									 draggable:false, 
 									 width:800, 
 									 height:600}).addClass("bodyFont");
+		getParentList(function(parents) {
+			var lines = [];
+			for (var parent in parents) {
+				lines.push(parents[parent].username + " (" + parents[parent].name + ")<br/>");
+			}
+			$('#contactList').html(lines.join('\n'));
+		});
   	}
+	
+	function getParentList(callback) {
+		$.get("contacts/jimmy", function(data) {
+			var list = data.split('\n');
+			var finalList = [];
+			for (var parent in list){
+				var info = list[parent].split(',');
+				finalList.push({username:info[0], name:info[1]});
+			}
+			callback(finalList);
+		});
+	}
 	
 	function showApplyJobPopup(jobId){
 		$.get("jobApplicationPopup/jimmy/" + jobId + "/", function(data){$("#applyJobPopup").html(data);$("#applyJobPopup").dialog({title:"Apply for this job?"});});
