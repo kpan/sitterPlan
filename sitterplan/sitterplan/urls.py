@@ -25,6 +25,7 @@ urlpatterns = patterns('',
 	
 	url(r'^.*/sitterPlan.css$', genericViews.css, name="genericCss"),
 	url(r'^.*/schedule_table.js$', genericViews.scheduleTable, name="genericScheduleTable"),
+	url(r'^.*/babysitter_edit_schedule.js$', genericViews.babysitterScheduleTable, name="babysitterScheduleTable"),
     # Examples:
     # url(r'^$', 'sitterplan.views.home', name='home'),
     # url(r'^sitterplan/', include('sitterplan.foo.urls')),

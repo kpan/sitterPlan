@@ -31,7 +31,7 @@ def schedule(request, username):
 											   endTime=datetime.datetime(t[4], t[5]+1, t[6], t[7]))
 	reply = ""
 	for timeRange in s.freeTimeRanges.all():
-		reply += timeRange.startTime.strftime("%a %b %d %H") + " " + timeRange.endTime.strftime("%a %b %d %H") + "\n"
+		reply += timeRange.startTime.strftime("%w %H") + " " + timeRange.endTime.strftime("%w %H") + "\n"
 	return HttpResponse(reply)
 
 def addToDict(dict, key, job, type):
@@ -42,7 +42,6 @@ def addToDict(dict, key, job, type):
 
 def goThroughJobs(jobs, dict, type):
 	for job in jobs:
-		print "there is a job ", type
 		for timeRange in job.timeRanges.all():
 			if (timeRange.startTime + datetime.timedelta(hours=1)) >= timeRange.endTime:
 				addToDict(dict, timeRange.startTime.strftime("%a%b%d%H"), job.title, type+"SingleSquare")
@@ -51,12 +50,11 @@ def goThroughJobs(jobs, dict, type):
 				
 				currentTime = timeRange.startTime + datetime.timedelta(hours=1)
 				while currentTime < (timeRange.endTime - datetime.timedelta(hours=1)):
-					addToDict(dict, currentTime.strftime("%a%b%d%H"), "", type+"Middle")
+					addToDict(dict, currentTime.strftime("%a%b%d%H"), "&nbsp;", type+"Middle")
 					currentTime = currentTime + datetime.timedelta(hours=1)
-				addToDict(dict, currentTime.strftime("%a%b%d%H"), "", type+"Bottom")
+				addToDict(dict, currentTime.strftime("%a%b%d%H"), "&nbsp;", type+"Bottom")
 
 def calendarWithJobs(request):
-	print "hi"
 	dict = request.POST
 	s = SitterUser.objects.get(username=dict["username"])
 	st = [int(x) for x in dict["startDate"].split(" ")]
@@ -70,7 +68,7 @@ def calendarWithJobs(request):
 	for timeRange in s.freeTimeRanges.all():
 		currentTime = timeRange.startTime
 		while currentTime < timeRange.endTime:
-			scheduleDict[currentTime.strftime("%a%b%d%H")] = "free"
+			scheduleDict[currentTime.strftime("%w%H")] = "free"
 			currentTime = currentTime + datetime.timedelta(hours=1)
 	
 	output = '<tr>\n<th style="width:10%;"></th>\n';
@@ -80,11 +78,24 @@ def calendarWithJobs(request):
 		currentDate = currentDate + datetime.timedelta(days=1)
 	output += '</tr>\n'
 	
-	for hour in range(18, 24): # these should really be calculated.  I am just too unhappy to do it right now.
+	earliestHour = 24
+	latestHour = 0
+	for hour in range(0, 24):
+		for day in range(0, 7):
+			weeklykey = (startDate + datetime.timedelta(days=day, hours=hour)).strftime("%w%H")
+			key = (startDate + datetime.timedelta(days=day, hours=hour)).strftime("%a%b%d%H")
+			if weeklykey in scheduleDict.keys() or key in jobDict.keys():
+				if hour < earliestHour:
+					earliestHour = hour
+				if hour > latestHour:
+					latestHour = hour
+	
+	for hour in range(earliestHour, latestHour + 1):
 		output += "<tr>\n<td align='right'>" + (startDate + datetime.timedelta(hours=hour)).strftime("%I%p") + "</td>"
 		for day in range(0, 7):
+			weeklykey = (startDate + datetime.timedelta(days=day, hours=hour)).strftime("%w%H")
 			key = (startDate + datetime.timedelta(days=day, hours=hour)).strftime("%a%b%d%H")
-			if key in scheduleDict.keys():
+			if weeklykey in scheduleDict.keys():
 				output += "<td class='freeSquare'>"
 			else:
 				output += "<td class='nonfreeSquare'>"
@@ -92,7 +103,7 @@ def calendarWithJobs(request):
 				joblist = jobDict[key]
 				percent = 100 / len(joblist)
 				for (jobtext, type) in joblist:
-					output += "<div height='22px' width='" + str(int(percent)) + "%' class='" + type + "'>" + jobtext + "</div>"
+					output += "<div width='" + str(int(percent)) + "%' class='" + type + "'>" + jobtext + "</div>"
 			output += "</td>\n"
 		output += "</tr>\n"
 	return HttpResponse(output)

@@ -8,3 +8,7 @@ def css(request):
 def scheduleTable(request):
 	file = open(base_path() + "schedule_table.js", 'r')
 	return HttpResponse(file.read())
+	
+def babysitterScheduleTable(request):
+	file = open(base_path() + "babysitter_edit_schedule.js", 'r')
+	return HttpResponse(file.read())
