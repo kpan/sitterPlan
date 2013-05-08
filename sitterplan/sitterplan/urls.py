@@ -20,6 +20,9 @@ urlpatterns = patterns('',
 	url(r'^sitter/contacts/(?P<username>[^/]*)/$', sitterViews.contacts, name="sitterContacts"),
 	url(r'^sitter/list$', sitterViews.jobs_list, name="sitterJobsList"),
 	url(r'^sitter/calendar$', sitterViews.apply_jobs, name="sitterJobsCalendar"),
+	
+	url(r'^sitter/myJobs/(?P<username>[^/]*)/$', sitterViews.myJobs, name="sitterMyJobs"),
+	url(r'^sitter/knownJobs/(?P<username>[^/]*)/$', sitterViews.knownJobs, name="sitterKnownJobs"),
 	url(r'^sitter/calendarWithJobs/$', sitterViews.calendarWithJobs, name="sitterJobsCalendarTable"),
 	url(r'^sitter/schedule/(?P<username>[^/]*)/$', sitterViews.schedule, name="sitterSchedule"),
 	

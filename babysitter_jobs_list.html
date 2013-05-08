@@ -16,6 +16,21 @@
 <script type="text/javascript" src="schedule_table.js"></script>
 <script type="text/javascript" src="babysitter_edit_schedule.js"></script>
 </head>
+<script>
+	$//initialization things
+	$(function() {		
+		updateMyJobs();
+		updateKnownJobs();
+  	});
+	
+	function updateMyJobs() {
+		$.get("myJobs/jimmy/", function(data){$("#myJobs").html(data);});
+	}
+	
+	function updateKnownJobs() {
+		$.get("knownJobs/jimmy/", function(data){$("#knownJobs").html(data);});
+	}
+</script>
 
 <body>
 <div id="logo">SitterPlan</div>
@@ -36,71 +51,11 @@
 </table>
 <div id="mainDiv">
 <h2>My Jobs</h2>
-<table style='border:2px solid #000000; width:98%; text-align:center;' cellPadding="10" >
-	<colgroup>
-       <col span="1" style="width: 17%;">
-       <col span="1" style="width: 25%;">
-       <col span="1" style="width: 20%;">
-    </colgroup>
-	<tr>
-		<th class="tableColumnLabel"> Family </td>
-		<th class="tableColumnLabel"> Date </td>
-		<th class="tableColumnLabel"> Time </td>
-		<th class="tableColumnLabel"> Notes </td>
-	</tr>
-	<tr>
-		<td> Frank </td>
-		<td> Monday, 4/15/13 </td>
-		<td> 7:00pm - 9:00pm </td>
-		<td> </td>
-	</tr>
-	<tr>
-		<td> Wu </td>
-		<td> Thursday, 4/18/13 </td>
-		<td> 6:00pm - 12:00am </td>
-		<td> </td>
-	</tr>
-	<tr>
-		<td> Goldstein </td>
-		<td> Saturday, 4/20/13 </td>
-		<td> 7:00pm - 11:00pm </td>
-		<td> </td>
-	</tr>
-</table>
-<p style='line-height: 1.3em'>&nbsp;  </p>
-</table>
+<table id="myJobs" style='border:2px solid #000000; width:98%; text-align:center;' cellPadding="10"></table>
+<p style='line-height: 1.3em'>&nbsp; </p>
 <h2>Available Jobs</h2>
-<table style='border:2px solid #000000; width:98%; text-align:center;' cellPadding="10" >
-	<colgroup>
-       <col span="1" style="width: 17%;">
-       <col span="1" style="width: 25%;">
-       <col span="1" style="width: 20%;">
-    </colgroup>
-	<tr>
-		<th class="tableColumnLabel"> Family </td>
-		<th class="tableColumnLabel"> Date </td>
-		<th class="tableColumnLabel"> Time </td>
-		<th>  </td>
-	</tr>
-	<tr>
-		<td> Smith </td>
-		<td> Monday, 4/15/13 </td>
-		<td> 7:00pm - 10:00pm </td>
-		<td> <input id="applySmith" type="button" name="applySmith" value="Apply" onclick="showApplyJobPopup();"/></td>
-	</tr>
-	<tr>
-		<td> Anderson </td>
-		<td> Wednesday, 4/18/13 </td>
-		<td> 8:00pm - 10:00pm </td>
-		<td> <input id="applyAnderson" type="button" name="applyAnderson" value="Apply" onclick="showApplyJobPopup();"/></td>
-	</tr>
-	<tr>
-		<td> Evans </td>
-		<td> Friday, 4/19/13 </td>
-		<td> 6:00pm - 9:00pm </td>
-		<td> <input id="applyEvans" type="button" name="applyEvans" value="Apply" onclick="showApplyJobPopup()"/></td>
-	</tr>
-</table>
+<table id="knownJobs" style='border:2px solid #000000; width:98%; text-align:center;' cellPadding="10" ></table>
+
 <div id="manageContactsPopup" style="display:none;">
 		<span>Search for new contacts<span>
 		<input type="text" name="Search" value="username">
