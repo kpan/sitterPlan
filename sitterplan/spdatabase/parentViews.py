@@ -21,7 +21,6 @@ def contacts(request, username):
 
 def postJob(request):
 	dict = request.POST
-	print dict.lists()
 	j = Job.objects.create(title=dict["title"], description=dict["description"], 
 						   flexible=(dict["flexible"]=="true"), length=dict["timePeriod"],
 						   creator=ParentUser.objects.get(username=dict["creator"]))
@@ -66,7 +65,6 @@ def deleteJob(request, jobNumber):
 def hire(request, jobNumber, sitter):
 	job = Job.objects.get(id=jobNumber)
 	job.sitter = SitterUser.objects.get(username=sitter)
-	print job.sitter
 	job.viewers.clear()
 	job.applicants.clear()
 	job.save()
@@ -74,11 +72,11 @@ def hire(request, jobNumber, sitter):
 	
 def ppJobApplicants(job):
 	if job.sitter:
-		return "Hired " + str(job.sitter)
+		return "Hired " + job.sitter.name
 	if job.applicants.count() > 0:
 		list = ""
 		for applicant in job.applicants.all():
-			list += "<p><a href = 'javascript:$.get(" + '"hire/' + str(job.id) + '/' + applicant.username + '/");' + "'>Hire " + applicant.name + "</a>"
+			list += "<p><a href = 'javascript:$.get(" + '"hire/' + str(job.id) + '/' + applicant.username + '/", function(data){update();});' + "'>Hire " + applicant.name + "</a>"
 		return list
 	return "No applicants yet"
 			

@@ -22,10 +22,9 @@ def contacts(request, username):
 def myJobs(request, username):
 	jobs = SitterUser.objects.get(username=username).jobsAccepted.all();
 	output = '<colgroup><col span="1" style="width: 17%;"><col span="1" style="width: 25%;"><col span="1" style="width: 20%;"></colgroup>\n'
-	output += '<tr><th class="tableColumnLabel">Family</th><th class="tableColumnLabel">Date</th>\n'
-	output += '<th class="tableColumnLabel">Time</th><th class="tableColumnLabel">Notes</th></tr>\n'
 	for job in jobs:
 		output += '<tr>\n'
+		output += '<td><h2>' + job.title + '</h2><p>' + job.description + '</p></td>\n'
 		output += '<td>' + job.creator.name + '</td>\n'
 		output += '<td>'
 		for timeRange in job.timeRanges.all():
@@ -35,7 +34,11 @@ def myJobs(request, username):
 		for timeRange in job.timeRanges.all():
 			output += '<p>' + timeRange.startTime.strftime("%I%p") + '-' + timeRange.endTime.strftime("%I%p") + '</p>'
 		output += '</td>\n'
-		output += '<td>' + job.description + '</td>\n</tr>\n'
+		output += '<td>'
+		if job.flexible:
+			output += "(" + str(job.length) + " hours within this range)"
+		output += '</td></tr>\n'
+		
 	return HttpResponse(output)
 
 def jobApplicationPopup(request, username, jobid):
@@ -76,10 +79,9 @@ def knownJobs(request, username):
 	s = SitterUser.objects.get(username=username)
 	jobs = s.jobsKnownOf.all()
 	output = '<colgroup><col span="1" style="width: 17%;"><col span="1" style="width: 25%;"><col span="1" style="width: 20%;"></colgroup>\n'
-	output += '<tr><th class="tableColumnLabel">Family</th><th class="tableColumnLabel">Date</th>\n'
-	output += '<th class="tableColumnLabel">Time</th><th class="tableColumnLabel"></th></tr>\n'
 	for job in jobs:
 		output += '<tr>\n'
+		output += '<td><h2>' + job.title + '</h2><p>' + job.description + '</p></td>\n'
 		output += '<td>' + job.creator.name + '</td>\n'
 		output += '<td>'
 		for timeRange in job.timeRanges.all():
@@ -89,6 +91,10 @@ def knownJobs(request, username):
 		for timeRange in job.timeRanges.all():
 			output += '<p>' + timeRange.startTime.strftime("%I %p") + ' - ' + timeRange.endTime.strftime("%I %p") + '</p>'
 		output += '</td>\n'
+		output += '<td>'
+		if job.flexible:
+			output += "(" + str(job.length) + " hours within this range)"
+		output += '</td>'
 		if len(job.applicants.filter(username=username)) > 0:
 			output += '<td><input type="button" class="bigButton" value="UnApply" onclick="showUnApplyJobPopup(' + str(job.id) + ')"/></td>\n</tr>\n'
 		else:
@@ -137,7 +143,6 @@ def calendarWithJobs(request):
 	startDate = datetime.datetime(st[0], st[1]+1, st[2])
 	jobDict = {}
 	goThroughJobs(s.jobsKnownOf.all(), jobDict, "available")
-	goThroughJobs(s.jobsAppliedFor.all(), jobDict, "applied")
 	goThroughJobs(s.jobsAccepted.all(), jobDict, "accepted")
 	
 	scheduleDict = {}
