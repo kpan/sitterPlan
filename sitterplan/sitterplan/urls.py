@@ -21,8 +21,12 @@ urlpatterns = patterns('',
 	url(r'^sitter/list$', sitterViews.jobs_list, name="sitterJobsList"),
 	url(r'^sitter/calendar$', sitterViews.apply_jobs, name="sitterJobsCalendar"),
 	
-	url(r'^sitter/myJobs/(?P<username>[^/]*)/$', sitterViews.myJobs, name="sitterMyJobs"),
+	url(r'^sitter/jobApplicationPopup/(?P<username>[^/]*)/(?P<jobid>[^/]*)/$', sitterViews.jobApplicationPopup, name="sitterApplyPopup"),
+	url(r'^sitter/applyForReal/(?P<username>[^/]*)/(?P<jobid>[^/]*)/$', sitterViews.actuallyApplyForJob, name="sitterActuallyApply"),
+	url(r'^sitter/jobUnApplicationPopup/(?P<username>[^/]*)/(?P<jobid>[^/]*)/$', sitterViews.jobUnApplicationPopup, name="sitterUnApplyPopup"),
+	url(r'^sitter/unApplyForReal/(?P<username>[^/]*)/(?P<jobid>[^/]*)/$', sitterViews.actuallyUnApplyForJob, name="sitterActuallyUnApply"),
 	url(r'^sitter/knownJobs/(?P<username>[^/]*)/$', sitterViews.knownJobs, name="sitterKnownJobs"),
+	url(r'^sitter/myJobs/(?P<username>[^/]*)/$', sitterViews.myJobs, name="sitterMyJobs"),
 	url(r'^sitter/calendarWithJobs/$', sitterViews.calendarWithJobs, name="sitterJobsCalendarTable"),
 	url(r'^sitter/schedule/(?P<username>[^/]*)/$', sitterViews.schedule, name="sitterSchedule"),
 	

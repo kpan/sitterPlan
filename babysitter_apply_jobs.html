@@ -29,6 +29,10 @@
 			   function(data){$("#calendar").html(data);});
 	}
 	
+	function update() {
+		updateCalendar();
+	}
+	
     //update calendar labels based on date
 	var SundayDate = new Date();
 	while(SundayDate.getDay() != 0){
@@ -133,16 +137,7 @@
         <table><tr>
         <td><input align="top" type="button" name="done" value="Done" onclick="submitSchedule()"/></td></tr></table>
 	</div>
-	<div id="applyJobPopup" title="">
-		<p>Do you want to apply to the job?</p>
-		<!-- need to retrieve job name here-->
-		<table>
-			<td>
-				<tr> <input align="top" type="button" name="ok" value="OK" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
-				<tr><input align="top" type="button" name="cancel" value="Cancel" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
-			</td>
-		</table>
-	</div>
+	<div id="applyJobPopup" title=""></div>
 </div>
 </div>
 </body>

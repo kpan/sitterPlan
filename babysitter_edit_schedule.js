@@ -210,8 +210,12 @@
 									 height:600}).addClass("bodyFont");
   	}
 	
-	function showApplyJobPopup(){
-      	$("#applyJobPopup").dialog();
+	function showApplyJobPopup(jobId){
+		$.get("jobApplicationPopup/jimmy/" + jobId + "/", function(data){$("#applyJobPopup").html(data);$("#applyJobPopup").dialog({title:"Apply for this job?"});});
+	}
+	
+	function showUnApplyJobPopup(jobId){
+		$.get("jobUnApplicationPopup/jimmy/" + jobId + "/", function(data){$("#applyJobPopup").html(data);$("#applyJobPopup").dialog({title:"Withdraw your application?"});});
 	}
 
     function clearSchedule(){

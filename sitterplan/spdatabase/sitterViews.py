@@ -38,8 +38,43 @@ def myJobs(request, username):
 		output += '<td>' + job.description + '</td>\n</tr>\n'
 	return HttpResponse(output)
 
+def jobApplicationPopup(request, username, jobid):
+	job = Job.objects.get(id=jobid)
+	output = '<h2>' + job.title + '</h2>\n'
+	output += '<p>' + job.description + '</p>\n'
+	output += '<table><tr><td>'
+	output += '<input align="top" type="button" name="ok" value="Apply" onclick="'
+	output += "$('#applyJobPopup').dialog('close'); $.get('applyForReal/" + username + "/" + str(jobid) + "/', function(data){update();});" + '"/></td>\n'
+	output += '<td><input align="top" type="button" name="cancel" value="Cancel" onclick="' + "$('#applyJobPopup').dialog('close')" + '"/></td>\n'
+	output += '</tr></table>'
+	return HttpResponse(output)
+	
+def jobUnApplicationPopup(request, username, jobid):
+	job = Job.objects.get(id=jobid)
+	output = '<h2>' + job.title + '</h2>\n'
+	output += '<p>' + job.description + '</p>\n'
+	output += '<table><tr><td>'
+	output += '<input align="top" type="button" name="ok" value="UnApply" onclick="'
+	output += "$('#applyJobPopup').dialog('close'); $.get('unApplyForReal/" + username + "/" + str(jobid) + "/', function(data){update();});" + '"/></td>\n'
+	output += '<td><input align="top" type="button" name="cancel" value="Cancel" onclick="' + "$('#applyJobPopup').dialog('close')" + '"/></td>\n'
+	output += '</tr></table>'
+	return HttpResponse(output)
+
+def actuallyApplyForJob(request, username, jobid):
+	job = Job.objects.get(id=jobid)
+	job.applicants.add(SitterUser.objects.get(username=username))
+	job.save()
+	return HttpResponse("200 OK")
+	
+def actuallyUnApplyForJob(request, username, jobid):
+	job = Job.objects.get(id=jobid)
+	job.applicants.remove(SitterUser.objects.get(username=username))
+	job.save()
+	return HttpResponse("200 OK")
+
 def knownJobs(request, username):
-	jobs = SitterUser.objects.get(username=username).jobsKnownOf.all();
+	s = SitterUser.objects.get(username=username)
+	jobs = s.jobsKnownOf.all()
 	output = '<colgroup><col span="1" style="width: 17%;"><col span="1" style="width: 25%;"><col span="1" style="width: 20%;"></colgroup>\n'
 	output += '<tr><th class="tableColumnLabel">Family</th><th class="tableColumnLabel">Date</th>\n'
 	output += '<th class="tableColumnLabel">Time</th><th class="tableColumnLabel"></th></tr>\n'
@@ -54,7 +89,10 @@ def knownJobs(request, username):
 		for timeRange in job.timeRanges.all():
 			output += '<p>' + timeRange.startTime.strftime("%I %p") + ' - ' + timeRange.endTime.strftime("%I %p") + '</p>'
 		output += '</td>\n'
-		output += '<td><input type="button" class="bigButton" value="Apply" onclick="showApplyJobPopup(' + str(job.id) + ')"/></td>\n</tr>\n'
+		if len(job.applicants.filter(username=username)) > 0:
+			output += '<td><input type="button" class="bigButton" value="UnApply" onclick="showUnApplyJobPopup(' + str(job.id) + ')"/></td>\n</tr>\n'
+		else:
+			output += '<td><input type="button" class="bigButton" value="Apply" onclick="showApplyJobPopup(' + str(job.id) + ')"/></td>\n</tr>\n'
 	return HttpResponse(output)
 		
 def schedule(request, username):

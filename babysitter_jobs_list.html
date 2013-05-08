@@ -23,6 +23,11 @@
 		updateKnownJobs();
   	});
 	
+	function update() {
+		updateMyJobs();
+		updateKnownJobs();
+	}
+	
 	function updateMyJobs() {
 		$.get("myJobs/jimmy/", function(data){$("#myJobs").html(data);});
 	}
@@ -106,16 +111,7 @@
         <td><input align="top" type="button" name="cancel" value="Cancel" onclick="$('#editSchedulePopup').dialog('close')"/></td></tr>
     </table>
 	</div>
-	<div id="applyJobPopup" title="">
-		<p>Do you want to apply to the job?</p>
-		<!-- need to retrieve job name here-->
-		<table>
-			<td>
-				<tr> <input align="top" type="button" name="ok" value="Yes" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
-				<tr><input align="top" type="button" name="cancel" value="No" onclick="$('#applyJobPopup').dialog('close')"/> </tr>
-			</td>
-		</table>
-	</div>
+	<div id="applyJobPopup" title=""></div>
 </div>
 </div>
 </body>
