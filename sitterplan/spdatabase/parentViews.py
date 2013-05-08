@@ -36,45 +36,49 @@ def postJob(request):
 	return jobTable(request, dict["creator"])
 	
 def jobTable(request, username):
-	table = "<table id='jobTable'>\n"
+	output = "<table id='jobTable'>\n"
 	for job in ParentUser.objects.get(username=username).jobs.all():
-		table += "<tr><td><a href = 'javascript:info(" + str(job.id) + ")'>" + job.title + "</a></td>\n"
-		table += "<td>" + ppJobTimes(job) + "</td>\n<td>" + ppJobApplicants(job) + "</td></tr>\n"
-	table += "</table>"
-	return HttpResponse(table)
-
-def jobInfo(request, jobNumber):
-	job = Job.objects.get(id=jobNumber)
-	info = "<h2>" + job.title + "</h2>"
-	info += "<p>" + job.description + "</p>"
-	info += "<center><button onclick='delJob("+jobNumber+")'>Delete Job</button></center>"
-	return HttpResponse(info)
+		output += '<tr>\n'
+		output += '<td><button class="bigButton" onclick="delJob('+str(job.id)+')">Delete</button></td>' 
+		output += '<td><h2>' + job.title + '</h2><p>' + job.description + '</p></td>\n'
+		output += '<td>'
+		for timeRange in job.timeRanges.all():
+			output += '<p>' + timeRange.startTime.strftime("%A, %x") + '</p>'
+		output += '</td>\n'
+		output += '<td>' 
+		for timeRange in job.timeRanges.all():
+			output += '<p>' + timeRange.startTime.strftime("%I %p") + ' - ' + timeRange.endTime.strftime("%I %p") + '</p>'
+		output += '</td>\n'
+		output += '<td>'
+		if job.flexible:
+			output += "(" + str(job.length) + " hours within this range)"
+		output += '</td>'
+		output += '<td>' + ppJobApplicants(job) + '</td>' 
+	output += "</table>"
+	return HttpResponse(output)
 	
 def deleteJob(request, jobNumber):
 	job = Job.objects.get(id=jobNumber)
 	creator = job.creator.username
 	job.delete()
 	return jobTable(request, creator)
-	
-def ppJobTimes(job):
-	time = ""
-	separator = " and<br/>"
-	if job.flexible:
-		time += str(job.length) + " hours within "
-		separator = " or<br/>"
-	
-	outputstrings = []
-	for timeRange in job.timeRanges.all():
-		outputstrings.append(ppTimeRange(timeRange))
-	return time + separator.join(outputstrings)
 
-def ppTimeRange(timeRange):
-	return timeRange.startTime.strftime("%a %b %d %I%p") + " to " + timeRange.endTime.strftime("%I%p")
+def hire(request, jobNumber, sitter):
+	job = Job.objects.get(id=jobNumber)
+	job.sitter = SitterUser.objects.get(username=sitter)
+	print job.sitter
+	job.viewers.clear()
+	job.applicants.clear()
+	job.save()
+	return jobTable(request, job.creator.username)
 	
 def ppJobApplicants(job):
 	if job.sitter:
 		return "Hired " + str(job.sitter)
 	if job.applicants.count() > 0:
-		return "<a href = 'jobapplicants/" + str(job.id) + "'>" + str(job.applicants.count()) + " applicants</a>"
+		list = ""
+		for applicant in job.applicants.all():
+			list += "<p><a href = 'javascript:$.get(" + '"hire/' + str(job.id) + '/' + applicant.username + '/");' + "'>Hire " + applicant.name + "</a>"
+		return list
 	return "No applicants yet"
 			

@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 	url(r'^parent/$', parentViews.main, name="parentMain"),
 	url(r'^parent/postJob$', parentViews.postJob, name="parentPost"),
 	url(r'^parent/jobTable/(?P<username>[^/]*)/$', parentViews.jobTable, name="parentJobTable"),
-	url(r'^parent/jobInfo/(?P<jobNumber>[^/]*)/$', parentViews.jobInfo, name="parentJobInfo"),
+	url(r'^parent/hire/(?P<jobNumber>[^/]*)/(?P<sitter>[^/]*)/$', parentViews.hire, name="parentHire"),
 	url(r'^parent/deleteJob/(?P<jobNumber>[^/]*)/$', parentViews.deleteJob, name="parentDeleteJob"),
 	url(r'^parent/css$', parentViews.css, name="parentCss"),
 	
